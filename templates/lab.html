@@ -101,13 +101,42 @@
                 <div class="key-group" id="key-group-affine" style="display: none;">
                     <div class="row">
                         <div class="col-6 mb-3">
-                            <label for="affine_key_a" class="form-label fw-bold">Kunci A</label>
-                            <input type="number" class="form-control" id="affine_key_a" name="affine_key_a" placeholder="a (coprime 26)" value="{{ request.form.get('affine_key_a', '5') }}">
-                            <div class="form-text">Harus Coprime dgn 26 (ex: 3,5,7).</div>
+
+                            <label for="affine_key_a" class="form-label fw-bold">
+                                Kunci A
+                            </label>
+
+                            <input type="number"
+                                class="form-control"
+                                id="affine_key_a"
+                                name="affine_key_a"
+                                placeholder="Bilangan prima"
+                                value="{{ request.form.get('affine_key_a', '5') }}">
+
+                            <div class="form-text">
+                                Gunakan bilangan prima
+                                (contoh: 3, 5, 7, 11, 17, 19, 23).
+                            </div>
+
                         </div>
+
                         <div class="col-6 mb-3">
-                            <label for="affine_key_b" class="form-label fw-bold">Kunci B</label>
-                            <input type="number" class="form-control" id="affine_key_b" name="affine_key_b" placeholder="b (shift)" value="{{ request.form.get('affine_key_b', '8') }}">
+
+                            <label for="affine_key_b" class="form-label fw-bold">
+                                Kunci B
+                            </label>
+
+                            <input type="number"
+                                class="form-control"
+                                id="affine_key_b"
+                                name="affine_key_b"
+                                placeholder="Nilai pergeseran"
+                                value="{{ request.form.get('affine_key_b', '8') }}">
+
+                            <div class="form-text">
+                                Digunakan sebagai nilai pergeseran huruf.
+                            </div>
+
                         </div>
                     </div>
                 </div>
