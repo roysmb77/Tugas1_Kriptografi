@@ -1,228 +1,1002 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="crypto-stack-layout">
-    <!-- Kolom Form Input -->
-    <div class="stack-input">
-        <div class="crypto-card">
-            <h3 class="mb-3 text-center"><i class="fa-solid fa-lock me-2"></i>Mesin Kripto</h3>
-            <p class="text-center small mb-4" style="opacity: 0.8;">Pilih algoritma, masukkan teks, dan lihat keajaibannya.</p>
-            
-            <form method="POST" action="{{ url_for('index') }}" id="crypto-form" novalidate>
-                
-                <!-- Pilihan Algoritma -->
-                <div class="mb-3">
-                    <label for="algorithm-select" class="form-label fw-bold">Algoritma</label>
-                    <select class="form-select" id="algorithm-select" name="algorithm">
-                        <option value="caesar" {% if request.form.get('algorithm') == 'caesar' %}selected{% endif %}>1. Caesar Cipher</option>
-                        <option value="vigenere" {% if request.form.get('algorithm') == 'vigenere' %}selected{% endif %}>2. Vigenère Cipher</option>
-                        <option value="affine" {% if request.form.get('algorithm') == 'affine' %}selected{% endif %}>3. Affine Cipher</option>
-                        <option value="hill" {% if request.form.get('algorithm') == 'hill' %}selected{% endif %}>4. Hill Cipher</option>
-                        <option value="playfair" {% if request.form.get('algorithm') == 'playfair' %}selected{% endif %}>5. Playfair Cipher</option>
-                    </select>
-                </div>
 
-                <!-- Pilihan Mode (Encrypt / Decrypt) -->
-                <!-- Pilihan Mode -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold mb-2">Pilih Operasi</label>
+    <div class="crypto-stack-layout">
 
-                    <div class="mode-card-group">
-                        <input type="radio" class="btn-check" name="mode" id="mode-encrypt" value="encrypt"
-                            {% if request.form.get('mode', 'encrypt') == 'encrypt' %}checked{% endif %}>
-                        <label class="mode-card" for="mode-encrypt">
-                            <div class="mode-icon encrypt-icon">
-                                <i class="fa-solid fa-shield-halved"></i>
-                            </div>
-                            <div>
-                                <strong>Ubah ke Kode Rahasia</strong>
-                                <span>Enkripsi plaintext menjadi ciphertext</span>
-                            </div>
-                        </label>
+    <!-- HERO -->
+    <div class="crypto-card text-center">
 
-                        <input type="radio" class="btn-check" name="mode" id="mode-decrypt" value="decrypt"
-                            {% if request.form.get('mode') == 'decrypt' %}checked{% endif %}>
-                        <label class="mode-card" for="mode-decrypt">
-                            <div class="mode-icon decrypt-icon">
-                                <i class="fa-solid fa-key"></i>
-                            </div>
-                            <div>
-                                <strong>Buka Kode Rahasia</strong>
-                                <span>Dekripsi ciphertext menjadi plaintext</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
+        <h1 class="display-5 fw-bold mb-3">
+            <i id="hero-theme-icon"
+            class="fa-solid fa-cloud-sun text-primary me-2"></i>
+            CryptoSky
+        </h1>
 
-                <!-- Input Teks -->
-                <div class="mb-3">
-                    <label for="text-input" class="form-label fw-bold">Teks</label>
-                    <textarea class="form-control" id="text-input" name="text" rows="3" placeholder="Contoh: HALODUNIA atau KRIPTOGRAFI" required>{{ request.form.get('text', '') }}</textarea>
-                </div>
+        <p class="lead mb-4">
+            Platform pembelajaran kriptografi klasik berbasis simulasi interaktif.
+        </p>
 
-                <hr class="my-4" style="border-color: var(--card-border);">
+    </div>
 
-                <!-- DINAMIS: Input Key Berdasarkan Algoritma -->
-                
-                <!-- Kunci Caesar -->
-                <div class="key-group" id="key-group-caesar">
-                    <div class="mb-3">
-                        <label for="caesar_key" class="form-label fw-bold">Nilai Pergeseran (Shift)</label>
-                        <input type="number" class="form-control" id="caesar_key" name="caesar_key" placeholder="Contoh: 3" value="{{ request.form.get('caesar_key', '3') }}" min="1" max="25">
-                        <div class="form-text">Angka dari 1 sampai 25.</div>
-                    </div>
-                </div>
+    <!-- APA ITU KRIPTOGRAFI -->
+    <div class="crypto-card">
 
-                <!-- Kunci Vigenere -->
-                <div class="key-group" id="key-group-vigenere" style="display: none;">
-                    <div class="mb-3">
-                        <label for="vigenere_key" class="form-label fw-bold">Kata Kunci (Keyword)</label>
-                        <input type="text" class="form-control" id="vigenere_key" name="vigenere_key" placeholder="Contoh: SKY" value="{{ request.form.get('vigenere_key', 'SKY') }}">
-                        <div class="form-text">Hanya berupa huruf alphabet.</div>
-                    </div>
-                </div>
+        <h3 class="fw-bold mb-3">
+            <i class="fa-solid fa-lock me-2 text-primary"></i>
+            Apa itu Kriptografi?
+        </h3>
 
-                <!-- Kunci Affine -->
-                <div class="key-group" id="key-group-affine" style="display: none;">
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <label for="affine_key_a" class="form-label fw-bold">Kunci A</label>
-                            <input type="number" class="form-control" id="affine_key_a" name="affine_key_a" placeholder="a (coprime 26)" value="{{ request.form.get('affine_key_a', '5') }}">
-                            <div class="form-text">Harus Coprime dgn 26 (ex: 3,5,7).</div>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <label for="affine_key_b" class="form-label fw-bold">Kunci B</label>
-                            <input type="number" class="form-control" id="affine_key_b" name="affine_key_b" placeholder="b (shift)" value="{{ request.form.get('affine_key_b', '8') }}">
-                        </div>
-                    </div>
-                </div>
+        <p>
+            Kriptografi adalah ilmu untuk mengamankan informasi dengan cara mengubah
+            pesan asli menjadi bentuk tersandi sehingga tidak dapat dibaca oleh pihak
+            yang tidak memiliki kunci.
+        </p>
 
-                <!-- Kunci Hill -->
-                <div class="key-group" id="key-group-hill" style="display: none;">
+        <p class="mb-0">
+            Dalam kriptografi klasik, proses pengamanan pesan dilakukan menggunakan
+            teknik matematis sederhana seperti pergeseran huruf, substitusi,
+            hingga operasi matriks.
+        </p>
 
-                    <!-- Pilihan ukuran matriks -->
-                    <div class="mb-3">
-                        <label for="hill_matrix_size" class="form-label fw-bold">
-                            <i class="fa-solid fa-table-cells me-2 text-primary"></i>
-                            Ukuran Matriks
-                        </label>
+    </div>
 
-                        <select class="form-select" id="hill_matrix_size" name="hill_matrix_size">
-                            <option value="2" selected>2 x 2</option>
-                            <option value="3">3 x 3</option>
-                        </select>
+    <!-- TUJUAN WEBSITE -->
+    <div class="crypto-card">
 
-                        <div class="form-text">
-                            Pilih ukuran matriks kunci yang ingin digunakan.
-                        </div>
-                    </div>
+        <h3 class="fw-bold mb-3">
+            <i class="fa-solid fa-book-open text-info me-2"></i>
+            Tujuan CryptoSky
+        </h3>
 
-                    <!-- Grid Matrix -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">
-                            Matriks Kunci
-                        </label>
+        <p>
+            CryptoSky dirancang sebagai media pembelajaran interaktif untuk membantu
+            pengguna memahami konsep dasar kriptografi klasik melalui simulasi
+            enkripsi dan dekripsi secara langsung.
+        </p>
 
-                        <div id="hill-matrix-grid" class="hill-matrix-input-grid">
-                            <!-- Dibuat otomatis oleh JavaScript -->
-                        </div>
+        <p class="mb-0">
+            Website ini menampilkan berbagai algoritma kriptografi klasik beserta
+            visualisasi prosesnya agar lebih mudah dipahami oleh pelajar maupun mahasiswa.
+        </p>
 
-                        <!-- Hidden input untuk backend Flask -->
-                        <input
-                            type="hidden"
-                            id="hill_key_matrix"
-                            name="hill_key_matrix"
-                            value="{{ request.form.get('hill_key_matrix', '3,3\n2,5') }}"
-                        >
+    </div>
 
-                        <div class="form-text mt-2">
-                            Isi setiap elemen matriks kunci.
-                        </div>
-                    </div>
-                </div>
+    <!-- CARD ALGORITMA -->
+    <div class="row g-4">
 
-                <!-- Kunci Playfair -->
-                <div class="key-group" id="key-group-playfair" style="display: none;">
-                    <div class="mb-3">
-                        <label for="playfair_key" class="form-label fw-bold">Kata Kunci (Keyword)</label>
-                        <input type="text" class="form-control" id="playfair_key" name="playfair_key" placeholder="Contoh: MONARCHY" value="{{ request.form.get('playfair_key', 'MONARCHY') }}">
-                    </div>
-                </div>
+        <!-- Caesar -->
+        <div class="col-md-6">
+            <div class="crypto-card h-100">
 
-                <!-- Tombol Submit -->
-                <button type="submit" class="crypto-process-btn">
-                    <span class="btn-glow"></span>
+                <h4 class="fw-bold">
+                    <i class="fa-solid fa-wind text-info me-2"></i>
+                    Caesar Cipher
+                </h4>
 
-                    <i id="process-btn-icon"
-                        class="fa-solid fa-cloud-sun me-2"></i>
+                <p class="mb-3">
+                    Teknik kriptografi klasik dengan metode pergeseran huruf.
+                </p>
 
-                    Jalankan Proses
+                <button class="btn btn-sm btn-outline-primary"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#teoriCaesar">
+
+                    Lihat teori lengkap
                 </button>
-            </form>
+
+                <div class="collapse mt-3" id="teoriCaesar">
+
+                    <p>
+                        Algoritma Caesar Cipher adalah salah satu teknik kriptografi paling tua dan
+                        paling sederhana dalam sejarah keamanan informasi. Metode ini ditemukan oleh
+                        Julius Caesar, seorang jenderal dan pemimpin Romawi, sekitar tahun 50 SM.
+                        Caesar menggunakan metode ini untuk mengirim pesan rahasia kepada pasukannya
+                        agar isi pesan tidak mudah dipahami musuh apabila surat tersebut jatuh ke tangan
+                        lawan. Karena itulah algoritma ini diberi nama Caesar Cipher.
+                    </p>
+
+                    <p>
+                        Teknik ini termasuk ke dalam kriptografi klasik dengan metode substitusi, yaitu
+                        mengganti setiap huruf asli dengan huruf lain berdasarkan pergeseran tertentu
+                        dalam alfabet.
+                    </p>
+
+                    <p>
+                        Cara kerja Caesar Cipher cukup sederhana. Setiap huruf pada plainteks atau teks
+                        asli digeser beberapa langkah sesuai nilai kunci tertentu. Misalnya jika kunci
+                        yang digunakan adalah 3, maka huruf A menjadi D, B menjadi E, C menjadi F, dan
+                        seterusnya. Jika pergeseran melewati huruf Z, maka akan kembali lagi ke awal
+                        alfabet.
+                    </p>
+
+                    <p>
+                        Proses perubahan plainteks menjadi ciphertext disebut enkripsi. Untuk
+                        mengembalikan ciphertext menjadi teks asli digunakan proses dekripsi dengan cara
+                        menggeser huruf ke arah sebaliknya sesuai jumlah kunci.
+                    </p>
+
+                    <h6 class="fw-bold mt-4">Rumus Enkripsi</h6>
+
+                    <pre class="mb-3"><code>C = (P + K) mod 26</code></pre>
+
+                    <h6 class="fw-bold">Keterangan:</h6>
+
+                    <ul>
+                        <li><strong>C</strong> = Ciphertext</li>
+                        <li><strong>P</strong> = Nilai huruf plainteks</li>
+                        <li><strong>K</strong> = Kunci pergeseran</li>
+                        <li><strong>26</strong> = Jumlah huruf alfabet</li>
+                    </ul>
+
+                    <h6 class="fw-bold mt-4">Rumus Dekripsi</h6>
+
+                    <pre class="mb-3"><code>P = (C - K) mod 26</code></pre>
+
+                    <h6 class="fw-bold mt-4">Contoh Penggunaan</h6>
+
+                    <p>
+                        Contoh penggunaan Caesar Cipher dengan plainteks:
+                    </p>
+
+                    <pre><code>ROY BAKTI</code></pre>
+
+                    <p>
+                        Misalnya digunakan kunci pergeseran <strong>K = 3</strong>.
+                    </p>
+
+                    <h6 class="fw-bold">Perubahan Huruf:</h6>
+
+                    <ul>
+                        <li>R → U</li>
+                        <li>O → R</li>
+                        <li>Y → B</li>
+                        <li>B → E</li>
+                        <li>A → D</li>
+                        <li>K → N</li>
+                        <li>T → W</li>
+                        <li>I → L</li>
+                    </ul>
+
+                    <p>
+                        Maka hasil ciphertext-nya adalah:
+                    </p>
+
+                    <pre><code>ROY BAKTI → URB EDNWL</code></pre>
+
+                    <p>
+                        Jika ingin dikembalikan ke bentuk asli, maka setiap huruf pada ciphertext
+                        digeser mundur sebanyak 3 langkah.
+                    </p>
+
+                    <p class="mb-0">
+                        Caesar Cipher memang mudah dipahami dan menjadi dasar pembelajaran kriptografi
+                        modern, tetapi tingkat keamanannya sangat rendah karena hanya memiliki sedikit
+                        kemungkinan kunci. Oleh karena itu, algoritma ini saat ini lebih sering digunakan
+                        untuk pembelajaran dasar konsep enkripsi dibandingkan untuk pengamanan data nyata.
+                    </p>
+
+                </div>
+
+            </div>
         </div>
-    </div>
 
-    <!-- Kolom Hasil -->
-    <div class="stack-result">
-        {% if result %}
-        <div class="crypto-card fade-in">
-            <h3 class="mb-3"><i class="fa-solid fa-square-check text-success me-2"></i>Hasil Proses</h3>
-            
-            <!-- Hasil Akhir -->
-            <div class="mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <label class="form-label fw-bold text-success mb-0">Teks Output:</label>
-                    <button type="button" class="btn btn-sm btn-outline-success" id="btn-copy">
-                        <i class="fa-solid fa-copy me-1"></i>Salin Hasil
-                    </button>
-                </div>
-                <div class="p-3 bg-success bg-opacity-10 border border-success rounded fw-bold selectable-output" id="output-text" style="word-break: break-all; font-size: 1.2rem; user-select: text !important; -webkit-user-select: text !important;" data-raw-result="{{ result.result }}">
-                    {{ result.result }}
-                </div>
-            </div>
+        <!-- Vigenère -->
+        <div class="col-md-6">
+            <div class="crypto-card h-100">
 
-            <!-- Rumus / Formula -->
-            {% if result.formula %}
-            <div class="mb-4">
-                <label class="form-label fw-bold"><i class="fa-solid fa-calculator me-2"></i>Rumus & Info Tambahan:</label>
-                <div class="mb-0">{{ result.formula | safe }}</div>
-            </div>
-            {% endif %}
+                <h4 class="fw-bold">
+                    <i class="fa-solid fa-cloud text-primary me-2"></i>
+                    Vigenère Cipher
+                </h4>
 
-            <!-- Visualisasi Langkah (Steps) -->
-            {% if result.steps %}
-            <div class="mb-3">
-                <label class="form-label fw-bold"><i class="fa-solid fa-list-ol me-2"></i>Penjelasan Langkah demi Langkah:</label>
-                <div class="accordion" id="stepsAccordion">
-                    <div class="accordion-item" style="background-color: transparent; border-color: var(--card-border);">
-                        <h2 class="accordion-header" id="headingSteps">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSteps" aria-expanded="false" aria-controls="collapseSteps" style="background-color: var(--input-bg); color: var(--input-text);">
-                                Klik untuk melihat detail perhitungan
-                            </button>
-                        </h2>
-                        <div id="collapseSteps" class="accordion-collapse collapse" aria-labelledby="headingSteps" data-bs-parent="#stepsAccordion">
-                            <div class="accordion-body" style="background-color: var(--pre-bg); color: var(--text-color);">
-                                <div class="mb-0">
-                                    {% for step in result.steps %}
-                                        <div class="mb-1">{{ step | safe }}</div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
+                <p class="mb-3">
+                    Teknik kriptografi klasik dengan substitusi polialfabetik menggunakan keyword.
+                </p>
+
+                <button class="btn btn-sm btn-outline-primary"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#teoriVigenere"
+                        aria-expanded="false"
+                        aria-controls="teoriVigenere">
+
+                    Lihat teori lengkap
+                </button>
+
+                <div class="collapse mt-3" id="teoriVigenere">
+
+                    <p>
+                        Algoritma Vigenère Cipher adalah pengembangan dari Caesar Cipher
+                        yang dibuat untuk mengatasi kelemahan pada sistem substitusi sederhana.
+                        Algoritma ini pertama kali diperkenalkan oleh Giovan Battista Bellaso
+                        pada tahun 1553, tetapi kemudian lebih dikenal dengan nama Blaise de
+                        Vigenère, seorang diplomat dan kriptografer asal Prancis yang
+                        mengembangkan metode tersebut pada abad ke-16.
+                    </p>
+
+                    <p>
+                        Vigenère Cipher termasuk ke dalam kriptografi klasik jenis substitusi
+                        polialfabetik, yaitu teknik enkripsi yang menggunakan lebih dari satu
+                        alfabet sehingga lebih sulit dipecahkan dibanding Caesar Cipher.
+                    </p>
+
+                    <p>
+                        Cara kerja Vigenère Cipher menggunakan dua komponen utama, yaitu
+                        plainteks dan kata kunci. Setiap huruf pada plainteks akan dienkripsi
+                        menggunakan huruf pada kunci yang dipasangkan secara berulang.
+                        Nilai pergeseran tiap huruf tidak selalu sama seperti Caesar Cipher,
+                        melainkan mengikuti huruf pada kunci. Karena itu pola enkripsi menjadi
+                        lebih kompleks dan lebih aman.
+                    </p>
+
+                    <h6 class="fw-bold mt-4">Rumus Enkripsi</h6>
+
+                    <pre class="mb-3"><code>Cᵢ = (Pᵢ + Kᵢ) mod 26</code></pre>
+
+                    <h6 class="fw-bold">Keterangan:</h6>
+
+                    <ul>
+                        <li><strong>Cᵢ</strong> = Huruf ciphertext</li>
+                        <li><strong>Pᵢ</strong> = Huruf plainteks</li>
+                        <li><strong>Kᵢ</strong> = Huruf kunci</li>
+                        <li><strong>26</strong> = Jumlah huruf alfabet</li>
+                    </ul>
+
+                    <h6 class="fw-bold mt-4">Rumus Dekripsi</h6>
+
+                    <pre class="mb-3"><code>Pᵢ = (Cᵢ - Kᵢ) mod 26</code></pre>
+
+                    <h6 class="fw-bold mt-4">Contoh Penggunaan</h6>
+
+                    <p>
+                        Contoh penggunaan Vigenère Cipher dengan plainteks:
+                    </p>
+
+                    <pre><code>ROY BAKTI</code></pre>
+
+                    <p>
+                        Misalnya digunakan kata kunci:
+                    </p>
+
+                    <pre><code>KUNCI</code></pre>
+
+                    <p>
+                        Karena jumlah huruf plainteks lebih panjang daripada kunci,
+                        maka kunci diulang:
+                    </p>
+
+                    <pre><code>KUNCIKUNC</code></pre>
+
+                    <h6 class="fw-bold mt-4">Tabel Pasangan Huruf</h6>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle">
+
+                            <tbody>
+
+                                <tr>
+                                    <th>Plaainteks</th>
+                                    <td>R</td>
+                                    <td>O</td>
+                                    <td>Y</td>
+                                    <td>B</td>
+                                    <td>A</td>
+                                    <td>K</td>
+                                    <td>T</td>
+                                    <td>I</td>
+                                </tr>
+
+                                <tr>
+                                    <th>Kunci</th>
+                                    <td>K</td>
+                                    <td>U</td>
+                                    <td>N</td>
+                                    <td>C</td>
+                                    <td>I</td>
+                                    <td>K</td>
+                                    <td>U</td>
+                                    <td>N</td>
+                                </tr>
+
+                                <tr>
+                                    <th>Ciphertext</th>
+                                    <td>B</td>
+                                    <td>I</td>
+                                    <td>L</td>
+                                    <td>D</td>
+                                    <td>I</td>
+                                    <td>U</td>
+                                    <td>N</td>
+                                    <td>V</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
                     </div>
+
+                    <p>
+                        Maka hasil ciphertext-nya adalah:
+                    </p>
+
+                    <pre><code>ROY BAKTI → BIL DIUNV</code></pre>
+
+                    <p>
+                        Proses dekripsi dilakukan dengan mengurangi nilai huruf ciphertext
+                        menggunakan nilai huruf pada kunci sehingga menghasilkan kembali
+                        plainteks asli.
+                    </p>
+
+                    <p class="mb-0">
+                        Dibandingkan Caesar Cipher, Vigenère Cipher memiliki tingkat
+                        keamanan yang lebih baik karena menggunakan banyak pola
+                        pergeseran. Namun, algoritma ini tetap dapat dipecahkan
+                        dengan analisis frekuensi apabila panjang kunci berhasil
+                        diketahui. Karena itu, saat ini Vigenère Cipher lebih banyak
+                        digunakan sebagai media pembelajaran dasar kriptografi
+                        dibandingkan untuk keamanan modern.
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Affine -->
+        <div class="col-md-6">
+            <div class="crypto-card h-100">
+
+                <h4 class="fw-bold">
+                    <i class="fa-solid fa-sun text-warning me-2"></i>
+                    Affine Cipher
+                </h4>
+
+                <p class="mb-3">
+                    Teknik kriptografi klasik berbasis fungsi linear dengan dua buah kunci.
+                </p>
+
+                <button class="btn btn-sm btn-outline-primary"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#teoriAffine"
+                        aria-expanded="false"
+                        aria-controls="teoriAffine">
+
+                    Lihat teori lengkap
+                </button>
+
+                <div class="collapse mt-3" id="teoriAffine">
+
+                    <p>
+                        Algoritma Affine Cipher adalah salah satu metode kriptografi klasik
+                        yang merupakan pengembangan dari Caesar Cipher. Algoritma ini
+                        menggunakan operasi matematika berupa perkalian dan penjumlahan
+                        untuk mengenkripsi setiap huruf pada plainteks.
+                    </p>
+
+                    <p>
+                        Affine Cipher mulai dikenal dalam perkembangan kriptografi modern
+                        sebagai metode substitusi monoalfabetik yang lebih kompleks dibanding
+                        Caesar Cipher karena menggunakan dua buah kunci. Teknik ini banyak
+                        dipelajari dalam matematika diskrit dan keamanan informasi karena
+                        melibatkan konsep modulo dan fungsi linear.
+                    </p>
+
+                    <p>
+                        Cara kerja Affine Cipher dilakukan dengan mengubah setiap huruf menjadi
+                        angka terlebih dahulu berdasarkan posisi alfabet, yaitu A = 0, B = 1,
+                        C = 2, sampai Z = 25. Setelah itu, nilai huruf diproses menggunakan
+                        rumus matematika dengan dua kunci, yaitu <strong>a</strong> dan
+                        <strong>b</strong>.
+                    </p>
+
+                    <p>
+                        Nilai <strong>a</strong> harus relatif prima terhadap 26 agar proses
+                        dekripsi dapat dilakukan. Hasil perhitungan kemudian diubah kembali
+                        menjadi huruf ciphertext.
+                    </p>
+
+                    <h6 class="fw-bold mt-4">Rumus Enkripsi</h6>
+
+                    <pre class="mb-3"><code>C = (aP + b) mod 26</code></pre>
+
+                    <h6 class="fw-bold">Keterangan:</h6>
+
+                    <ul>
+                        <li><strong>C</strong> = Ciphertext</li>
+                        <li><strong>P</strong> = Nilai huruf plainteks</li>
+                        <li><strong>a</strong> = Kunci perkalian</li>
+                        <li><strong>b</strong> = Kunci penjumlahan</li>
+                        <li><strong>26</strong> = Jumlah huruf alfabet</li>
+                    </ul>
+
+                    <h6 class="fw-bold mt-4">Rumus Dekripsi</h6>
+
+                    <pre class="mb-3"><code>P = a⁻¹(C - b) mod 26</code></pre>
+
+                    <h6 class="fw-bold">Keterangan:</h6>
+
+                    <ul>
+                        <li><strong>a⁻¹</strong> = Invers modulo dari a</li>
+                    </ul>
+
+                    <h6 class="fw-bold mt-4">Contoh Penggunaan</h6>
+
+                    <p>
+                        Contoh penggunaan Affine Cipher dengan plainteks:
+                    </p>
+
+                    <pre><code>ROY BAKTI</code></pre>
+
+                    <p>
+                        Misalnya digunakan:
+                    </p>
+
+                    <ul>
+                        <li><strong>a = 5</strong></li>
+                        <li><strong>b = 8</strong></li>
+                    </ul>
+
+                    <h6 class="fw-bold mt-4">Konversi Huruf ke Angka</h6>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle">
+
+                            <tbody>
+
+                                <tr>
+                                    <th>Huruf</th>
+                                    <td>R</td>
+                                    <td>O</td>
+                                    <td>Y</td>
+                                    <td>B</td>
+                                    <td>A</td>
+                                    <td>K</td>
+                                    <td>T</td>
+                                    <td>I</td>
+                                </tr>
+
+                                <tr>
+                                    <th>Nilai</th>
+                                    <td>17</td>
+                                    <td>14</td>
+                                    <td>24</td>
+                                    <td>1</td>
+                                    <td>0</td>
+                                    <td>10</td>
+                                    <td>19</td>
+                                    <td>8</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <p>
+                        Gunakan rumus:
+                    </p>
+
+                    <pre><code>C = (5P + 8) mod 26</code></pre>
+
+                    <h6 class="fw-bold mt-4">Perhitungan</h6>
+
+                    <ul>
+                        <li>R → ((5 × 17 + 8) mod 26 = 15) → P</li>
+                        <li>O → ((5 × 14 + 8) mod 26 = 0) → A</li>
+                        <li>Y → ((5 × 24 + 8) mod 26 = 24) → Y</li>
+                        <li>B → ((5 × 1 + 8) mod 26 = 13) → N</li>
+                        <li>A → ((5 × 0 + 8) mod 26 = 8) → I</li>
+                        <li>K → ((5 × 10 + 8) mod 26 = 6) → G</li>
+                        <li>T → ((5 × 19 + 8) mod 26 = 25) → Z</li>
+                        <li>I → ((5 × 8 + 8) mod 26 = 22) → W</li>
+                    </ul>
+
+                    <p>
+                        Maka hasil ciphertext-nya adalah:
+                    </p>
+
+                    <pre><code>ROY BAKTI → PAY NIGZW</code></pre>
+
+                    <p class="mb-0">
+                        Affine Cipher memiliki tingkat keamanan yang lebih baik dibanding
+                        Caesar Cipher karena menggunakan dua kunci sekaligus, sehingga
+                        jumlah kemungkinan kombinasi menjadi lebih banyak. Namun,
+                        algoritma ini masih termasuk kriptografi klasik sehingga tetap
+                        dapat dipecahkan menggunakan analisis frekuensi apabila digunakan
+                        pada pesan yang panjang. Saat ini Affine Cipher lebih sering
+                        digunakan sebagai bahan pembelajaran dasar konsep matematika
+                        dalam kriptografi modern.
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Hill -->
+        <div class="col-md-6">
+            <div class="crypto-card h-100">
+
+                <h4 class="fw-bold">
+                    <i class="fa-solid fa-table-cells text-success me-2"></i>
+                    Hill Cipher
+                </h4>
+
+                <p class="mb-3">
+                    Teknik kriptografi klasik berbasis matriks dan aljabar linear.
+                </p>
+
+                <button class="btn btn-sm btn-outline-primary"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#teoriHill"
+                        aria-expanded="false"
+                        aria-controls="teoriHill">
+
+                    Lihat teori lengkap
+                </button>
+
+                <div class="collapse mt-3" id="teoriHill">
+
+                    <p>
+                        Algoritma Hill Cipher adalah salah satu metode kriptografi klasik
+                        yang menggunakan konsep matriks dan aljabar linear dalam proses
+                        enkripsi. Algoritma ini ditemukan oleh Lester S. Hill pada tahun 1929.
+                    </p>
+
+                    <p>
+                        Berbeda dengan Caesar Cipher, Vigenère Cipher, dan Affine Cipher
+                        yang mengenkripsi huruf satu per satu, Hill Cipher mengenkripsi
+                        beberapa huruf sekaligus dalam bentuk blok. Karena menggunakan
+                        operasi matriks, algoritma ini memiliki tingkat keamanan yang lebih
+                        baik dibanding metode substitusi klasik lainnya dan menjadi salah
+                        satu dasar penting dalam perkembangan kriptografi modern.
+                    </p>
+
+                    <p>
+                        Cara kerja Hill Cipher dimulai dengan mengubah setiap huruf plainteks
+                        menjadi angka berdasarkan urutan alfabet, yaitu A = 0, B = 1,
+                        C = 2, hingga Z = 25.
+                    </p>
+
+                    <p>
+                        Setelah itu, huruf-huruf plainteks dikelompokkan menjadi beberapa
+                        blok sesuai ukuran matriks kunci. Matriks kunci kemudian dikalikan
+                        dengan matriks plainteks menggunakan operasi modulo 26. Hasil
+                        perkalian tersebut akan menghasilkan ciphertext baru dalam bentuk
+                        angka yang kemudian diubah kembali menjadi huruf.
+                    </p>
+
+                    <h6 class="fw-bold mt-4">Rumus Enkripsi</h6>
+
+                    <pre class="mb-3"><code>C = K × P mod 26</code></pre>
+
+                    <h6 class="fw-bold">Keterangan:</h6>
+
+                    <ul>
+                        <li><strong>C</strong> = Matriks ciphertext</li>
+                        <li><strong>K</strong> = Matriks kunci</li>
+                        <li><strong>P</strong> = Matriks plainteks</li>
+                        <li><strong>26</strong> = Jumlah huruf alfabet</li>
+                    </ul>
+
+                    <h6 class="fw-bold mt-4">Rumus Dekripsi</h6>
+
+                    <pre class="mb-3"><code>P = K⁻¹ × C mod 26</code></pre>
+
+                    <h6 class="fw-bold">Keterangan:</h6>
+
+                    <ul>
+                        <li><strong>K⁻¹</strong> = Invers matriks kunci</li>
+                    </ul>
+
+                    <h6 class="fw-bold mt-4">Contoh Penggunaan</h6>
+
+                    <p>
+                        Contoh penggunaan Hill Cipher dengan plainteks:
+                    </p>
+
+                    <pre><code>ROY BAKTI</code></pre>
+
+                    <p>
+                        Misalnya digunakan matriks kunci 2×2:
+                    </p>
+
+                    <pre><code>
+        K = | 3  3 |
+            | 2  5 |
+                    </code></pre>
+
+                    <h6 class="fw-bold mt-4">Konversi Huruf ke Angka</h6>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle">
+
+                            <tbody>
+
+                                <tr>
+                                    <th>Huruf</th>
+                                    <td>R</td>
+                                    <td>O</td>
+                                    <td>Y</td>
+                                    <td>B</td>
+                                    <td>A</td>
+                                    <td>K</td>
+                                    <td>T</td>
+                                    <td>I</td>
+                                </tr>
+
+                                <tr>
+                                    <th>Nilai</th>
+                                    <td>17</td>
+                                    <td>14</td>
+                                    <td>24</td>
+                                    <td>1</td>
+                                    <td>0</td>
+                                    <td>10</td>
+                                    <td>19</td>
+                                    <td>8</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <p>
+                        Kelompokkan menjadi pasangan:
+                    </p>
+
+                    <pre><code>(17,14), (24,1), (0,10), (19,8)</code></pre>
+
+                    <h6 class="fw-bold mt-4">Contoh Proses Enkripsi Pasangan Pertama</h6>
+
+                    <pre><code>
+        | 3  3 |   | 17 |   =   | 93  |
+        | 2  5 | × | 14 |       | 104 |
+                    </code></pre>
+
+                    <p>
+                        Lalu dihitung modulo 26:
+                    </p>
+
+                    <pre><code>
+        93 mod 26  = 15
+        104 mod 26 = 0
+                    </code></pre>
+
+                    <p>
+                        Hasil:
+                    </p>
+
+                    <ul>
+                        <li>15 → P</li>
+                        <li>0 → A</li>
+                    </ul>
+
+                    <p>
+                        Pasangan pertama menghasilkan ciphertext:
+                    </p>
+
+                    <pre><code>RO → PA</code></pre>
+
+                    <p>
+                        Jika seluruh pasangan dihitung dengan proses yang sama,
+                        maka hasil ciphertext menjadi:
+                    </p>
+
+                    <pre><code>ROY BAKTI → PAKYKSFI</code></pre>
+
+                    <p class="mb-0">
+                        Hill Cipher memiliki keunggulan karena mampu mengenkripsi banyak
+                        huruf sekaligus sehingga pola huruf lebih sulit dianalisis.
+                        Algoritma ini juga menggunakan konsep matematika yang lebih
+                        kompleks dibanding algoritma klasik lainnya.
+                    </p>
+
+                    <p class="mb-0 mt-3">
+                        Namun, Hill Cipher tetap memiliki kelemahan apabila matriks
+                        kunci berhasil diketahui oleh pihak lain. Oleh karena itu,
+                        algoritma ini saat ini lebih sering digunakan sebagai media
+                        pembelajaran konsep matriks dalam kriptografi daripada sebagai
+                        sistem keamanan modern.
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Playfair -->
+        <div class="col-md-12">
+            <div class="crypto-card h-100">
+
+                <h4 class="fw-bold">
+                    <i class="fa-solid fa-key text-danger me-2"></i>
+                    Playfair Cipher
+                </h4>
+
+                <p class="mb-3">
+                    Teknik kriptografi klasik yang mengenkripsi pasangan huruf menggunakan matriks 5×5.
+                </p>
+
+                <button class="btn btn-sm btn-outline-primary"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#teoriPlayfair"
+                        aria-expanded="false"
+                        aria-controls="teoriPlayfair">
+
+                    Lihat teori lengkap
+                </button>
+
+                <div class="collapse mt-3" id="teoriPlayfair">
+
+                    <p>
+                        Algoritma Playfair Cipher adalah salah satu metode kriptografi
+                        klasik yang ditemukan oleh Charles Wheatstone pada tahun 1854
+                        dan kemudian dipopulerkan oleh Lord Playfair sehingga algoritma
+                        ini dikenal dengan nama Playfair Cipher.
+                    </p>
+
+                    <p>
+                        Berbeda dengan Caesar Cipher atau Vigenère Cipher yang
+                        mengenkripsi satu huruf dalam satu waktu, Playfair Cipher
+                        mengenkripsi dua huruf sekaligus atau disebut digraf.
+                        Pada masanya, algoritma ini dianggap lebih aman karena mampu
+                        menyembunyikan pola frekuensi huruf tunggal yang biasanya
+                        digunakan untuk memecahkan sandi klasik.
+                    </p>
+
+                    <p>
+                        Cara kerja Playfair Cipher dimulai dengan membuat tabel matriks
+                        berukuran 5×5 yang berisi huruf alfabet berdasarkan kata kunci
+                        tertentu. Karena jumlah kotak hanya 25, maka huruf I dan J
+                        biasanya digabung menjadi satu.
+                    </p>
+
+                    <p>
+                        Setelah matriks dibuat, plainteks dibagi menjadi pasangan huruf.
+                        Jika dalam satu pasangan terdapat huruf yang sama, maka
+                        ditambahkan huruf penyisip seperti X. Jika jumlah huruf ganjil,
+                        maka ditambahkan huruf tambahan di akhir.
+                    </p>
+
+                    <h6 class="fw-bold mt-4">Aturan Enkripsi Playfair Cipher</h6>
+
+                    <ul>
+                        <li>
+                            Jika kedua huruf berada pada baris yang sama,
+                            maka masing-masing huruf diganti dengan huruf
+                            di sebelah kanannya.
+                        </li>
+
+                        <li>
+                            Jika kedua huruf berada pada kolom yang sama,
+                            maka masing-masing huruf diganti dengan huruf
+                            di bawahnya.
+                        </li>
+
+                        <li>
+                            Jika kedua huruf membentuk persegi panjang,
+                            maka setiap huruf diganti dengan huruf pada
+                            sudut lain di baris yang sama.
+                        </li>
+                    </ul>
+
+                    <h6 class="fw-bold mt-4">Contoh Penggunaan</h6>
+
+                    <p>
+                        Contoh penggunaan Playfair Cipher dengan plainteks:
+                    </p>
+
+                    <pre><code>ROY BAKTI</code></pre>
+
+                    <p>
+                        Misalnya digunakan kata kunci:
+                    </p>
+
+                    <pre><code>KUNCI</code></pre>
+
+                    <p>
+                        Maka matriks 5×5 yang terbentuk adalah:
+                    </p>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle">
+
+                            <tbody>
+
+                                <tr>
+                                    <td>K</td>
+                                    <td>U</td>
+                                    <td>N</td>
+                                    <td>C</td>
+                                    <td>I</td>
+                                </tr>
+
+                                <tr>
+                                    <td>A</td>
+                                    <td>B</td>
+                                    <td>D</td>
+                                    <td>E</td>
+                                    <td>F</td>
+                                </tr>
+
+                                <tr>
+                                    <td>G</td>
+                                    <td>H</td>
+                                    <td>L</td>
+                                    <td>M</td>
+                                    <td>O</td>
+                                </tr>
+
+                                <tr>
+                                    <td>P</td>
+                                    <td>Q</td>
+                                    <td>R</td>
+                                    <td>S</td>
+                                    <td>T</td>
+                                </tr>
+
+                                <tr>
+                                    <td>V</td>
+                                    <td>W</td>
+                                    <td>X</td>
+                                    <td>Y</td>
+                                    <td>Z</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <p>
+                        Huruf J digabung dengan I.
+                    </p>
+
+                    <p>
+                        Plainteks:
+                    </p>
+
+                    <pre><code>ROYBAKTI</code></pre>
+
+                    <p>
+                        Dibagi menjadi pasangan:
+                    </p>
+
+                    <pre><code>RO   YB   AK   TI</code></pre>
+
+                    <h6 class="fw-bold mt-4">Proses Enkripsi</h6>
+
+                    <ul>
+                        <li>RO → LT</li>
+                        <li>YB → WE</li>
+                        <li>AK → GA</li>
+                        <li>TI → FK</li>
+                    </ul>
+
+                    <p>
+                        Maka hasil ciphertext-nya adalah:
+                    </p>
+
+                    <pre><code>ROY BAKTI → LTWEGAFK</code></pre>
+
+                    <p>
+                        Playfair Cipher memiliki tingkat keamanan yang lebih baik
+                        dibanding Caesar Cipher karena mengenkripsi dua huruf sekaligus
+                        sehingga analisis frekuensi menjadi lebih sulit dilakukan.
+                        Selain itu, penggunaan matriks membuat pola enkripsi lebih kompleks.
+                    </p>
+
+                    <p class="mb-0">
+                        Namun, algoritma ini tetap termasuk kriptografi klasik dan saat
+                        ini sudah tidak cukup aman untuk digunakan dalam pengamanan data
+                        modern. Meski begitu, Playfair Cipher masih sering dipelajari
+                        sebagai dasar pemahaman teknik substitusi dalam dunia kriptografi.
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- FITUR -->
+    <div class="crypto-card">
+
+        <h3 class="fw-bold mb-4">
+            <i class="fa-solid fa-star text-warning me-2"></i>
+            Fitur CryptoSky
+        </h3>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="text-center">
+
+                    <div class="fs-1 mb-3 text-info">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Enkripsi Interaktif
+                    </h5>
+
+                    <p class="mb-0">
+                        Melakukan proses enkripsi dan dekripsi secara langsung.
+                    </p>
+
                 </div>
             </div>
-            {% endif %}
-            
+
+            <div class="col-md-4">
+                <div class="text-center">
+
+                    <div class="fs-1 mb-3 text-success">
+                        <i class="fa-solid fa-table-cells"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Visualisasi Cipher
+                    </h5>
+
+                    <p class="mb-0">
+                        Menampilkan langkah dan proses algoritma secara visual.
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="text-center">
+
+                    <div class="fs-1 mb-3 text-primary">
+                        <i class="fa-solid fa-cloud"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Tema Dinamis
+                    </h5>
+
+                    <p class="mb-0">
+                        Tampilan otomatis berubah antara mode siang dan malam.
+                    </p>
+
+                </div>
+            </div>
+
         </div>
-        {% else %}
-        <!-- Tampilan Placeholder jika belum ada proses -->
-        <div class="crypto-card d-flex flex-column align-items-center justify-content-center" style="height: 100%; min-height: 400px; opacity: 0.7;">
-            <i class="fa-solid fa-cloud-sun fa-4x mb-3 text-primary" id="empty-state-icon"></i>
-            <h4>Area Hasil</h4>
-            <p class="text-center">Silakan masukkan teks dan proses algoritma di panel sebelah kiri untuk melihat hasil edukatif di sini.</p>
-        </div>
-        {% endif %}
+
     </div>
-</div>
+
+    <!-- CTA -->
+    <div class="crypto-card text-center">
+
+        <h2 class="fw-bold mb-3">
+            Siap Mencoba Kriptografi?
+        </h2>
+
+        <p class="mb-4">
+            Masuk ke Lab Kripto untuk mencoba berbagai algoritma klasik.
+        </p>
+
+        <a href="{{ url_for('lab') }}"
+        class="crypto-process-btn text-decoration-none d-inline-block">
+
+            <span class="btn-glow"></span>
+
+            <i class="fa-solid fa-flask me-2"></i>
+
+            Buka Lab Kripto
+        </a>
+
+    </div>
+
 {% endblock %}

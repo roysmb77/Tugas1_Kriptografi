@@ -10,8 +10,12 @@ app.secret_key = 'cryptosky_super_secret_key_for_flash_messages'
 # List Python sederhana untuk menyimpan riwayat selama aplikasi berjalan (di memory)
 history_data = []
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
+    return render_template('home.html')
+
+@app.route('/lab', methods=['GET', 'POST'])
+def lab():
     result_data = None
     
     if request.method == 'POST':
@@ -24,7 +28,7 @@ def index():
             # Validasi input teks dasar
             if not text:
                 flash('Silakan masukkan teks terlebih dahulu.', 'warning')
-                return redirect(url_for('index'))
+                return redirect(url_for('lab'))
 
             # Inisialisasi dictionary hasil
             process_result = {}
@@ -92,9 +96,9 @@ def index():
         except Exception as e:
             flash(f"Terjadi kesalahan yang tidak terduga: {str(e)}", 'danger')
 
-    return render_template('home.html', result=result_data, request=request)
+    return render_template('lab.html', result=result_data, request=request)
 
-@app.route('/history')
+@app.route('/riwayat')
 def history():
     return render_template('history.html', history=history_data)
 

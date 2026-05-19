@@ -749,3 +749,123 @@ pre {
     min-height: 420px;
 }
 
+.algo-button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.algo-btn {
+    flex: 1 1 120px;
+    text-align: center;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: var(--input-bg);
+    color: var(--input-text);
+    border: 1px solid var(--card-border);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.algo-btn:hover {
+    transform: translateY(-2px);
+    border-color: #38bdf8;
+}
+
+.algorithm-radio:checked + .algo-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            #4facfe,
+            #00c6fb
+        );
+
+    color: #fff;
+
+    border-color: transparent;
+
+    box-shadow:
+        0 10px 22px rgba(79,172,254,0.28);
+
+    transform: translateY(-2px);
+}
+
+[data-theme="dark"] .algorithm-radio:checked + .algo-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #3b82f6
+        );
+
+    box-shadow:
+        0 10px 24px rgba(37,99,235,0.35);
+}
+
+/* MATRIX SIZE BUTTONS */
+
+.matrix-size-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.matrix-btn {
+
+    min-width: 90px;
+
+    text-align: center;
+
+    padding: 10px 14px;
+
+    border-radius: 14px;
+
+    background: var(--input-bg);
+
+    color: var(--input-text);
+
+    border: 1px solid var(--card-border);
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.matrix-btn:hover {
+
+    transform: translateY(-2px);
+
+    border-color: #38bdf8;
+}
+
+.matrix-radio:checked + .matrix-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            #4facfe,
+            #00c6fb
+        );
+
+    color: white;
+
+    border-color: transparent;
+
+    box-shadow:
+        0 8px 18px rgba(79,172,254,0.28);
+}
+
+[data-theme="dark"] .matrix-radio:checked + .matrix-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #3b82f6
+        );
+}

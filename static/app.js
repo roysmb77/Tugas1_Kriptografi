@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const navLogoIcon = document.getElementById('nav-logo-icon');
         const emptyStateIcon = document.getElementById('empty-state-icon');
         const processBtnIcon = document.getElementById('process-btn-icon');
+        const heroThemeIcon = document.getElementById('hero-theme-icon');
         
         if (theme === 'dark') {
             icon.classList.remove('fa-moon');
@@ -45,6 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 processBtnIcon.classList.remove('fa-cloud-sun');
                 processBtnIcon.classList.add('fa-cloud-moon');
             }
+            if (heroThemeIcon) {
+            heroThemeIcon.classList.remove('fa-cloud-sun', 'text-primary');
+            heroThemeIcon.classList.add('fa-cloud-moon', 'text-warning');
+        }
         } else {
             icon.classList.remove('fa-sun');
             icon.classList.add('fa-moon');
@@ -61,6 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (processBtnIcon) {
                 processBtnIcon.classList.remove('fa-cloud-moon');
                 processBtnIcon.classList.add('fa-cloud-sun');
+            }
+            if (heroThemeIcon) {
+                heroThemeIcon.classList.remove('fa-cloud-moon', 'text-warning');
+                heroThemeIcon.classList.add('fa-cloud-sun', 'text-primary');
             }
         }
     }
@@ -96,23 +105,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 3. Logika Form Algoritma (Menampilkan input key yang sesuai)
-    const algoSelect = document.getElementById('algorithm-select');
-    if (algoSelect) {
-        algoSelect.addEventListener('change', updateKeyInputs);
-        // Panggil sekali saat dimuat untuk mengatur tampilan awal
+    const algorithmRadios = document.querySelectorAll('input[name="algorithm"]');
+
+    if (algorithmRadios.length > 0) {
+        algorithmRadios.forEach(radio => {
+            radio.addEventListener('change', updateKeyInputs);
+        });
+
         updateKeyInputs();
     }
 
     function updateKeyInputs() {
-        const selected = algoSelect.value;
+        const selectedRadio = document.querySelector('input[name="algorithm"]:checked');
+        const selected = selectedRadio ? selectedRadio.value : 'caesar';
+
         const keyGroups = document.querySelectorAll('.key-group');
-        
-        // Sembunyikan semua terlebih dahulu
+
         keyGroups.forEach(group => {
             group.style.display = 'none';
         });
 
-        // Tampilkan yang sesuai dengan pilihan
         const activeGroup = document.getElementById(`key-group-${selected}`);
         if (activeGroup) {
             activeGroup.style.display = 'block';
@@ -123,9 +135,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // HILL CIPHER MATRIX GRID INPUT
     // =========================================
 
-    const hillMatrixSize = document.getElementById('hill_matrix_size');
+    const hillMatrixSize = document.querySelectorAll('input[name="hill_matrix_size"]');
     const hillMatrixGrid = document.getElementById('hill-matrix-grid');
     const hillMatrixHidden = document.getElementById('hill_key_matrix');
+
+    function getSelectedMatrixSize() {
+    const selected = document.querySelector('input[name="hill_matrix_size"]:checked');
+    return selected ? parseInt(selected.value) : 2;
+    }
 
     function getDefaultHillValues(size) {
         if (size === 3) {
@@ -158,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateHiddenHillMatrix() {
         if (!hillMatrixGrid || !hillMatrixHidden || !hillMatrixSize) return;
 
-        const size = parseInt(hillMatrixSize.value);
+        const size = getSelectedMatrixSize();
         const rows = [];
 
         for (let r = 0; r < size; r++) {
@@ -178,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderHillMatrixGrid() {
         if (!hillMatrixSize || !hillMatrixGrid || !hillMatrixHidden) return;
 
-        const size = parseInt(hillMatrixSize.value);
+        const size = getSelectedMatrixSize();
 
         hillMatrixGrid.innerHTML = '';
         hillMatrixGrid.classList.remove('hill-grid-2', 'hill-grid-3');
@@ -220,11 +237,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentMatrix = parseHillMatrixValue(hillMatrixHidden.value);
 
         if (currentMatrix && currentMatrix.length === 3) {
-            hillMatrixSize.value = '3';
+            const matrix3 = document.getElementById('matrix-3');
+            if (matrix3) matrix3.checked = true;
         }
 
         renderHillMatrixGrid();
-        hillMatrixSize.addEventListener('change', renderHillMatrixGrid);
+        hillMatrixSize.forEach(radio => {
+            radio.addEventListener('change', renderHillMatrixGrid);
+        });
     }
 
     // 4. Logika Interaktif Playfair Cipher (Highlight Tabel)
@@ -299,8 +319,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cryptoForm) {
         cryptoForm.addEventListener('submit', function(e) {
             const textInput = document.getElementById('text-input').value.trim();
-            const algoSelect = document.getElementById('algorithm-select').value;
-            
+            const selectedAlgo = document.querySelector('input[name="algorithm"]:checked');
+            const algoSelect = selectedAlgo ? selectedAlgo.value : 'caesar';
+
             if (!textInput) {
                 e.preventDefault();
                 alert('Pesan Error: Teks tidak boleh kosong.');
@@ -410,6 +431,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Gunakan fallback untuk environment non-HTTPS atau jika clipboard tidak didukung
                     fallbackCopyTextToClipboard(textToCopy);
                 }
+            }
+        });
+    }
+    // CLEAR FORM
+    const clearFormBtn = document.getElementById('clear-form-btn');
+
+    if (clearFormBtn) {
+
+        clearFormBtn.addEventListener('click', () => {
+
+            // TEXT INPUT
+            const textInput = document.getElementById('text-input');
+
+            if (textInput) {
+                textInput.value = '';
+            }
+
+            // HILL MATRIX
+            const matrixInputs = document.querySelectorAll('.hill-matrix-cell');
+
+            matrixInputs.forEach(input => {
+                input.value = '';
+            });
+
+            // OUTPUT
+            const outputText = document.getElementById('output-text');
+
+            if (outputText) {
+                outputText.innerText = '';
             }
         });
     }

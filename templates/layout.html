@@ -38,10 +38,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'index' %}active fw-bold{% endif %}" href="{{ url_for('index') }}">Home</a>
+                        <a class="nav-link {% if request.endpoint == 'index' %}active fw-bold{% endif %}" href="{{ url_for('index') }}">Beranda</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'history' %}active fw-bold{% endif %}" href="{{ url_for('history') }}">History</a>
+                        <a class="nav-link {% if request.endpoint == 'lab' %}active fw-bold{% endif %}" href="{{ url_for('lab') }}">Lab Kriptografi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'history' %}active fw-bold{% endif %}" href="{{ url_for('history') }}">Riwayat</a>
                     </li>
                 </ul>
                 <div class="d-flex">
@@ -71,8 +74,25 @@
     </div>
 
     <!-- Footer -->
-    <footer class="text-center py-4 mt-auto w-100" style="position: absolute; bottom: 0;">
-        <p class="mb-0" style="opacity: 0.8;"><small>&copy; 2026 CryptoSky. Simulasi Kriptografi Klasik.</small></p>
+    <footer class="text-center py-4 mt-5">
+
+        <div class="container">
+
+            <h5 class="fw-bold mb-2">
+                <i class="fa-solid fa-cloud text-primary me-2"></i>
+                CryptoSky
+            </h5>
+
+            <p class="mb-2" style="opacity: 0.8;">
+                Platform pembelajaran kriptografi klasik berbasis simulasi interaktif.
+            </p>
+
+            <small style="opacity: 0.7;">
+                © 2026 CryptoSky — Dibangun untuk media pembelajaran kriptografi klasik.
+            </small>
+
+        </div>
+
     </footer>
 
     <!-- Bootstrap 5 JS Bundle -->
