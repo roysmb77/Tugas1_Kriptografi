@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="crypto-card fade-in">
+            <h3 class="mb-4 text-center"><i class="fa-solid fa-clock-rotate-left me-2"></i>Riwayat Proses (Memory Sesi Ini)</h3>
+            
+            {% if history %}
+            <div class="table-responsive">
+                <table class="table table-hover table-glass align-middle">
+                    <thead>
+                        <tr>
+                            <th>Waktu</th>
+                            <th>Algoritma</th>
+                            <th>Mode</th>
+                            <th>Input</th>
+                            <th>Key / Parameter</th>
+                            <th>Output</th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-size: 0.9rem;">
+                        {% for item in history %}
+                        <tr>
+                            <td class="text-nowrap">{{ item.time }}</td>
+                            <td><span class="badge bg-primary">{{ item.algorithm }}</span></td>
+                            <td>
+                                {% if item.mode == 'Encrypt' %}
+                                    <span class="badge bg-danger">Enkripsi</span>
+                                {% else %}
+                                    <span class="badge bg-success">Dekripsi</span>
+                                {% endif %}
+                            </td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ item.input }}">{{ item.input }}</td>
+                            <td class="font-monospace small">{{ item.key }}</td>
+                            <td class="fw-bold" style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ item.output }}">{{ item.output }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fa-solid fa-folder-open fa-3x mb-3" style="opacity: 0.5;"></i>
+                <h5>Belum ada riwayat.</h5>
+                <p>Riwayat enkripsi dan dekripsi akan muncul di sini setelah Anda melakukan proses di halaman Home.</p>
+                <a href="{{ url_for('index') }}" class="btn btn-primary mt-2">Mulai Simulasi</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

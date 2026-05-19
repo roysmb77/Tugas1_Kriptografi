@@ -1,0 +1,171 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <!-- Kolom Form Input -->
+    <div class="col-lg-5 mb-4">
+        <div class="crypto-card">
+            <h3 class="mb-3 text-center"><i class="fa-solid fa-lock me-2"></i>Mesin Kripto</h3>
+            <p class="text-center small mb-4" style="opacity: 0.8;">Pilih algoritma, masukkan teks, dan lihat keajaibannya.</p>
+            
+            <form method="POST" action="{{ url_for('index') }}" id="crypto-form" novalidate>
+                
+                <!-- Pilihan Algoritma -->
+                <div class="mb-3">
+                    <label for="algorithm-select" class="form-label fw-bold">Algoritma</label>
+                    <select class="form-select" id="algorithm-select" name="algorithm">
+                        <option value="caesar" {% if request.form.get('algorithm') == 'caesar' %}selected{% endif %}>1. Caesar Cipher</option>
+                        <option value="vigenere" {% if request.form.get('algorithm') == 'vigenere' %}selected{% endif %}>2. Vigenère Cipher</option>
+                        <option value="affine" {% if request.form.get('algorithm') == 'affine' %}selected{% endif %}>3. Affine Cipher</option>
+                        <option value="hill" {% if request.form.get('algorithm') == 'hill' %}selected{% endif %}>4. Hill Cipher</option>
+                        <option value="playfair" {% if request.form.get('algorithm') == 'playfair' %}selected{% endif %}>5. Playfair Cipher</option>
+                    </select>
+                </div>
+
+                <!-- Pilihan Mode (Encrypt / Decrypt) -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Mode</label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="mode" id="mode-encrypt" value="encrypt" {% if request.form.get('mode', 'encrypt') == 'encrypt' %}checked{% endif %}>
+                            <label class="form-check-label" for="mode-encrypt">Enkripsi</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="mode" id="mode-decrypt" value="decrypt" {% if request.form.get('mode') == 'decrypt' %}checked{% endif %}>
+                            <label class="form-check-label" for="mode-decrypt">Dekripsi</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Teks -->
+                <div class="mb-3">
+                    <label for="text-input" class="form-label fw-bold">Teks</label>
+                    <textarea class="form-control" id="text-input" name="text" rows="3" placeholder="Contoh: HALODUNIA atau KRIPTOGRAFI" required>{{ request.form.get('text', '') }}</textarea>
+                </div>
+
+                <hr class="my-4" style="border-color: var(--card-border);">
+
+                <!-- DINAMIS: Input Key Berdasarkan Algoritma -->
+                
+                <!-- Kunci Caesar -->
+                <div class="key-group" id="key-group-caesar">
+                    <div class="mb-3">
+                        <label for="caesar_key" class="form-label fw-bold">Nilai Pergeseran (Shift)</label>
+                        <input type="number" class="form-control" id="caesar_key" name="caesar_key" placeholder="Contoh: 3" value="{{ request.form.get('caesar_key', '3') }}" min="1" max="25">
+                        <div class="form-text">Angka dari 1 sampai 25.</div>
+                    </div>
+                </div>
+
+                <!-- Kunci Vigenere -->
+                <div class="key-group" id="key-group-vigenere" style="display: none;">
+                    <div class="mb-3">
+                        <label for="vigenere_key" class="form-label fw-bold">Kata Kunci (Keyword)</label>
+                        <input type="text" class="form-control" id="vigenere_key" name="vigenere_key" placeholder="Contoh: SKY" value="{{ request.form.get('vigenere_key', 'SKY') }}">
+                        <div class="form-text">Hanya berupa huruf alphabet.</div>
+                    </div>
+                </div>
+
+                <!-- Kunci Affine -->
+                <div class="key-group" id="key-group-affine" style="display: none;">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label for="affine_key_a" class="form-label fw-bold">Kunci A</label>
+                            <input type="number" class="form-control" id="affine_key_a" name="affine_key_a" placeholder="a (coprime 26)" value="{{ request.form.get('affine_key_a', '5') }}">
+                            <div class="form-text">Harus Coprime dgn 26 (ex: 3,5,7).</div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label for="affine_key_b" class="form-label fw-bold">Kunci B</label>
+                            <input type="number" class="form-control" id="affine_key_b" name="affine_key_b" placeholder="b (shift)" value="{{ request.form.get('affine_key_b', '8') }}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kunci Hill -->
+                <div class="key-group" id="key-group-hill" style="display: none;">
+                    <div class="mb-3">
+                        <label for="hill_key_matrix" class="form-label fw-bold">Matriks Kunci</label>
+                        <textarea class="form-control" id="hill_key_matrix" name="hill_key_matrix" rows="3" placeholder="3, 3&#10;2, 5">{{ request.form.get('hill_key_matrix', '3, 3\n2, 5') }}</textarea>
+                        <div class="form-text">Pisahkan kolom dengan koma (,), pisahkan baris dengan Enter. Mendukung matriks 2x2 atau 3x3. Determinan harus punya inverse mod 26.</div>
+                    </div>
+                </div>
+
+                <!-- Kunci Playfair -->
+                <div class="key-group" id="key-group-playfair" style="display: none;">
+                    <div class="mb-3">
+                        <label for="playfair_key" class="form-label fw-bold">Kata Kunci (Keyword)</label>
+                        <input type="text" class="form-control" id="playfair_key" name="playfair_key" placeholder="Contoh: MONARCHY" value="{{ request.form.get('playfair_key', 'MONARCHY') }}">
+                    </div>
+                </div>
+
+                <!-- Tombol Submit -->
+                <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm mt-2">
+                    <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Proses
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Kolom Hasil -->
+    <div class="col-lg-7">
+        {% if result %}
+        <div class="crypto-card fade-in">
+            <h3 class="mb-3"><i class="fa-solid fa-square-check text-success me-2"></i>Hasil Proses</h3>
+            
+            <!-- Hasil Akhir -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="form-label fw-bold text-success mb-0">Teks Output:</label>
+                    <button type="button" class="btn btn-sm btn-outline-success" id="btn-copy">
+                        <i class="fa-solid fa-copy me-1"></i>Salin Hasil
+                    </button>
+                </div>
+                <div class="p-3 bg-success bg-opacity-10 border border-success rounded fw-bold selectable-output" id="output-text" style="word-break: break-all; font-size: 1.2rem; user-select: text !important; -webkit-user-select: text !important;">
+                    {{ result.result }}
+                </div>
+            </div>
+
+            <!-- Rumus / Formula -->
+            {% if result.formula %}
+            <div class="mb-4">
+                <label class="form-label fw-bold"><i class="fa-solid fa-calculator me-2"></i>Rumus & Info Tambahan:</label>
+                <div class="mb-0">{{ result.formula | safe }}</div>
+            </div>
+            {% endif %}
+
+            <!-- Visualisasi Langkah (Steps) -->
+            {% if result.steps %}
+            <div class="mb-3">
+                <label class="form-label fw-bold"><i class="fa-solid fa-list-ol me-2"></i>Penjelasan Langkah demi Langkah:</label>
+                <div class="accordion" id="stepsAccordion">
+                    <div class="accordion-item" style="background-color: transparent; border-color: var(--card-border);">
+                        <h2 class="accordion-header" id="headingSteps">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSteps" aria-expanded="false" aria-controls="collapseSteps" style="background-color: var(--input-bg); color: var(--input-text);">
+                                Klik untuk melihat detail perhitungan
+                            </button>
+                        </h2>
+                        <div id="collapseSteps" class="accordion-collapse collapse" aria-labelledby="headingSteps" data-bs-parent="#stepsAccordion">
+                            <div class="accordion-body" style="background-color: var(--pre-bg); color: var(--text-color);">
+                                <div class="mb-0">
+                                    {% for step in result.steps %}
+                                        <div class="mb-1">{{ step | safe }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+        </div>
+        {% else %}
+        <!-- Tampilan Placeholder jika belum ada proses -->
+        <div class="crypto-card d-flex flex-column align-items-center justify-content-center" style="height: 100%; min-height: 400px; opacity: 0.7;">
+            <i class="fa-solid fa-cloud-sun fa-4x mb-3 text-primary" id="empty-state-icon"></i>
+            <h4>Area Hasil</h4>
+            <p class="text-center">Silakan masukkan teks dan proses algoritma di panel sebelah kiri untuk melihat hasil edukatif di sini.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

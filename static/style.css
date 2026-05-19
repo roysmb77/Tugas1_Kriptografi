@@ -1,0 +1,367 @@
+/* static/style.css */
+:root {
+    /* Light Mode Variables (Nuansa Langit Siang Cerah) */
+    --bg-color: #87CEEB; /* Sky blue */
+    --bg-gradient: linear-gradient(to bottom, #87CEEB, #E0F6FF);
+    --text-color: #333333;
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --card-border: rgba(255, 255, 255, 0.4);
+    --navbar-bg: rgba(255, 255, 255, 0.85);
+    --input-bg: rgba(255, 255, 255, 0.9);
+    --input-text: #333;
+    --pre-bg: rgba(240, 248, 255, 0.8);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+    /* Dark Mode Variables (Nuansa Langit Malam Tenang) */
+    --bg-color: #0B1021; /* Very dark blue */
+    --bg-gradient: linear-gradient(to bottom, #0B1021, #1B2755);
+    --text-color: #E2E8F0;
+    --card-bg: rgba(15, 23, 42, 0.6);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --navbar-bg: rgba(15, 23, 42, 0.85);
+    --input-bg: rgba(30, 41, 59, 0.8);
+    --input-text: #E2E8F0;
+    --pre-bg: rgba(15, 23, 42, 0.8);
+    --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Fix mobile text selection */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+.bg-success.bg-opacity-10 {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+}
+
+/* Global Form Hints & Placeholders */
+::placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+.form-text {
+    color: #6c757d;
+}
+
+[data-theme="dark"] ::placeholder {
+    color: #94a3b8 !important; /* Terang dan terbaca di dark mode */
+    opacity: 0.8;
+}
+
+[data-theme="dark"] .form-text {
+    color: #cbd5e1 !important; /* Soft tapi kontras di dark mode */
+}
+
+/* Fix Navbar Hamburger Icon di Dark Mode */
+[data-theme="dark"] .navbar-toggler-icon {
+    filter: invert(1) brightness(150%);
+}
+[data-theme="dark"] .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body {
+    background-color: var(--bg-color);
+    background-image: var(--bg-gradient);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    transition: background 0.5s ease, color 0.5s ease;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Navbar Glassmorphism */
+.navbar {
+    background-color: var(--navbar-bg) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--card-border);
+    transition: background 0.5s ease;
+}
+
+.navbar-nav .nav-link {
+    color: var(--text-color) !important;
+    opacity: 0.8;
+}
+
+.navbar-nav .nav-link.active {
+    opacity: 1;
+}
+
+/* Card Glassmorphism */
+.crypto-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px var(--shadow-color);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+}
+
+/* Inputs & Forms */
+.form-control, .form-select {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border: 1px solid var(--card-border);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    box-shadow: 0 0 0 0.25rem rgba(135, 206, 235, 0.25);
+    border-color: #87CEEB;
+}
+
+/* Area Hasil (Preformatted text) */
+pre {
+    background-color: var(--pre-bg);
+    color: var(--text-color);
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid var(--card-border);
+    white-space: pre-wrap;       /* CSS3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+/* ========================================= */
+/* EFEK LANGIT (AWAN & BINTANG)              */
+/* ========================================= */
+
+.sky-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* Awan untuk Light Mode */
+.cloud {
+    position: absolute;
+    background: #fff;
+    border-radius: 50px;
+    opacity: 0.8;
+    animation: moveClouds linear infinite;
+}
+
+.cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.cloud1 { width: 100px; height: 30px; top: 15%; left: -100px; animation-duration: 40s; }
+.cloud1::before { width: 40px; height: 40px; top: -20px; left: 15px; }
+.cloud1::after { width: 50px; height: 50px; top: -25px; left: 40px; }
+
+.cloud2 { width: 120px; height: 40px; top: 35%; left: -150px; animation-duration: 55s; opacity: 0.6; }
+.cloud2::before { width: 50px; height: 50px; top: -25px; left: 20px; }
+.cloud2::after { width: 60px; height: 60px; top: -35px; left: 50px; }
+
+.cloud3 { width: 80px; height: 25px; top: 60%; left: -80px; animation-duration: 35s; opacity: 0.7; }
+.cloud3::before { width: 30px; height: 30px; top: -15px; left: 10px; }
+.cloud3::after { width: 40px; height: 40px; top: -20px; left: 30px; }
+
+.cloud4 { width: 90px; height: 35px; top: 25%; left: -120px; animation-duration: 45s; opacity: 0.85; animation-delay: 5s; }
+.cloud4::before { width: 35px; height: 35px; top: -18px; left: 15px; }
+.cloud4::after { width: 45px; height: 45px; top: -22px; left: 40px; }
+
+.cloud5 { width: 110px; height: 38px; top: 75%; left: -140px; animation-duration: 50s; opacity: 0.65; animation-delay: 15s; }
+.cloud5::before { width: 40px; height: 40px; top: -20px; left: 18px; }
+.cloud5::after { width: 55px; height: 55px; top: -25px; left: 45px; }
+
+@keyframes moveClouds {
+    0% { transform: translateX(-150px); }
+    100% { transform: translateX(120vw); }
+}
+
+[data-theme="dark"] .cloud {
+    display: none; /* Sembunyikan awan di mode malam */
+}
+
+/* Bintang untuk Dark Mode */
+.star {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle linear infinite;
+    display: none;
+}
+
+[data-theme="dark"] .star {
+    display: block;
+}
+
+/* Animasi berkelip */
+@keyframes twinkle {
+    0% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 0; transform: scale(0.5); }
+}
+
+/* Animasi Muncul untuk Hasil */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tabel History */
+.table-glass {
+    color: var(--text-color);
+    --bs-table-color: var(--text-color);
+    --bs-table-bg: transparent;
+    --bs-table-hover-color: var(--text-color);
+    --bs-table-hover-bg: rgba(0, 0, 0, 0.04);
+}
+
+.table-glass th, .table-glass td {
+    border-color: var(--card-border) !important;
+    background-color: transparent !important;
+    color: var(--text-color) !important;
+}
+
+.table-glass thead th {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    font-weight: 600;
+}
+
+/* Dark Mode Penyesuaian Khusus Tabel History */
+[data-theme="dark"] .table-glass {
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .table-glass thead th {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: #f8fafc !important; /* Sangat terang & kontras untuk header */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-theme="dark"] .table-glass td {
+    color: #e2e8f0 !important; /* Terang dan elegan untuk isi tabel */
+    border-color: rgba(255, 255, 255, 0.1) !important; /* Border halus */
+}
+
+/* ========================================= */
+/* DYNAMIC DARK MODE & VISUALISASI           */
+/* ========================================= */
+
+/* Hill & Playfair Cipher Readability in Dark Mode */
+.dynamic-text-muted { color: #6c757d; }
+.dynamic-text { color: inherit; }
+.dynamic-text-success { color: #198754; }
+.dynamic-card-border { border-color: rgba(0, 0, 0, 0.125); }
+.dynamic-border-bottom { border-bottom: 1px solid rgba(0,0,0,0.1); }
+.dynamic-header-bg { background-color: rgba(13, 110, 253, 0.05); }
+.dynamic-footer-bg { background-color: rgba(25, 135, 84, 0.05); }
+.dynamic-bg-code { background-color: rgba(0, 0, 0, 0.05); }
+
+[data-theme="dark"] .dynamic-text-muted { color: #94a3b8; } /* Slate 400 - Lebih terang */
+[data-theme="dark"] .dynamic-text { color: #e2e8f0; } /* Slate 200 */
+[data-theme="dark"] .dynamic-text-success { color: #4ade80; } /* Green 400 */
+[data-theme="dark"] .dynamic-card-border { border-color: rgba(255, 255, 255, 0.15); }
+[data-theme="dark"] .dynamic-border-bottom { border-bottom: 1px solid rgba(255,255,255,0.15); }
+[data-theme="dark"] .dynamic-header-bg { background-color: rgba(13, 110, 253, 0.15); }
+[data-theme="dark"] .dynamic-footer-bg { background-color: rgba(74, 222, 128, 0.1); }
+[data-theme="dark"] .dynamic-bg-code { background-color: rgba(255, 255, 255, 0.1); }
+
+/* ========================================= */
+/* PLAYFAIR & HILL TABLE STYLES              */
+/* ========================================= */
+
+.playfair-table {
+    background-color: var(--input-bg) !important;
+    color: var(--input-text) !important;
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--input-text);
+}
+
+.playfair-table td, .playfair-table th {
+    border-color: var(--card-border) !important;
+    color: var(--input-text) !important;
+}
+
+/* Ukuran cell & transisi dasar */
+.pf-cell {
+    width: 45px;
+    height: 45px;
+    transition: all 0.3s ease;
+}
+
+/* Efek saat user hanya menghover cell di tabel */
+.pf-cell:hover {
+    background-color: rgba(13, 110, 253, 0.1) !important; /* Soft blue */
+    text-shadow: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Soft drop shadow instead of glow */
+    transform: scale(1.1);
+    z-index: 10;
+    position: relative;
+    border-radius: 6px;
+}
+
+/* Highlight via Javascript (saat step di hover) */
+.highlight-source {
+    background-color: rgba(13, 110, 253, 0.25) !important; /* Soft biru */
+    box-shadow: 0 2px 6px rgba(13, 110, 253, 0.15); /* Shadow depth ringan */
+    border: 1px solid rgba(13, 110, 253, 0.4) !important; /* Border untuk mempertegas batas */
+    font-weight: bold;
+    border-radius: 6px;
+    color: #0B1021 !important; /* Teks tegas */
+}
+
+.highlight-result {
+    background-color: rgba(25, 135, 84, 0.25) !important; /* Soft hijau */
+    box-shadow: 0 2px 6px rgba(25, 135, 84, 0.15);
+    border: 1px solid rgba(25, 135, 84, 0.4) !important;
+    font-weight: bold;
+    border-radius: 6px;
+    color: #0B1021 !important;
+}
+
+/* Penyesuaian Khusus Dark Mode untuk Tabel Playfair */
+[data-theme="dark"] .playfair-table td {
+    color: #e2e8f0 !important; /* Putih kalem/slate 200 */
+    border-color: rgba(255, 255, 255, 0.1) !important; /* Border tabel halus */
+}
+
+/* Warna highlight di dark mode: soft, clean, elegant, tanpa neon */
+[data-theme="dark"] .highlight-source {
+    background-color: rgba(59, 130, 246, 0.25) !important; /* Biru malam soft */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow gelap untuk kedalaman */
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+    color: #f8fafc !important; /* Teks putih jelas */
+    text-shadow: none; /* Tanpa neon */
+}
+
+[data-theme="dark"] .highlight-result {
+    background-color: rgba(34, 197, 94, 0.2) !important; /* Hijau malam soft */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(34, 197, 94, 0.4) !important;
+    color: #f8fafc !important;
+    text-shadow: none;
+}
+
+/* Hover cell biasa di dark mode: soft highlight */
+[data-theme="dark"] .pf-cell:hover {
+    background-color: rgba(255, 255, 255, 0.08) !important; /* Transparansi sangat tipis */
+    text-shadow: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+}
