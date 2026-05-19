@@ -1,86 +1,246 @@
-# SKY-CRYPTO-FLASK
-Aplikasi Web Simulasi Kriptografi Klasik berbasis Flask dengan tema "CryptoSky".
+# SKY-CRYPTO-FLASK ☁️🌙
 
-## Deskripsi
-Proyek ini adalah tugas mata kuliah Kriptografi untuk membuat simulasi lima algoritma kriptografi klasik (Caesar, Vigenère, Affine, Hill, dan Playfair). Aplikasi ini dibangun dengan framework web Python Flask, tanpa database, dan menampilkan proses perhitungan algoritma langkah demi langkah untuk tujuan edukasi. Tampilan dibalut dengan tema yang memukau "CryptoSky" yang mendukung *Light Mode* dan *Dark Mode*.
+### Simulasi Kriptografi Klasik Interaktif Berbasis Flask
 
-## Fitur
-- Enkripsi dan Dekripsi menggunakan 5 algoritma klasik.
-- Tampilan proses (langkah demi langkah), rumus, dan matriks.
-- Tema CryptoSky (awan bergerak, bintang di malam hari) dengan dukungan Mode Terang dan Gelap.
-- Riwayat (History) sesi enkripsi dan dekripsi.
-- Responsive design dan *glassmorphism* menggunakan Bootstrap 5 dan Vanilla CSS/JS.
+CryptoSky adalah aplikasi web edukatif berbasis **Python Flask** yang dirancang untuk membantu pengguna memahami cara kerja algoritma kriptografi klasik secara visual, interaktif, dan modern.
 
-## Algoritma
-1. **Caesar Cipher**: Menggeser setiap huruf alfabet berdasarkan nilai *key* numerik tertentu.
-2. **Vigenère Cipher**: Menggunakan *keyword* berulang untuk menentukan seberapa jauh pergeseran masing-masing huruf (kombinasi banyak Caesar cipher).
-3. **Affine Cipher**: Menggabungkan perkalian (dengan nilai coprime $a$) dan penambahan (dengan nilai $b$) lalu modulo 26.
-4. **Hill Cipher**: Menggunakan perkalian matriks (2x2 atau 3x3) dengan blok teks plaintext untuk menyandikan teks.
-5. **Playfair Cipher**: Mengenkripsi teks dengan menggunakan tabel huruf 5x5 berpasangan (bigram) dan aturan pergeseran khusus.
+Aplikasi ini tidak hanya melakukan proses enkripsi dan dekripsi, tetapi juga menampilkan proses matematika dan transformasi karakter secara **langkah demi langkah** sehingga lebih mudah dipahami oleh mahasiswa maupun pengguna awam.
 
-## Teknologi
-- Python 3.x
-- Flask (Web Framework)
-- Bootstrap 5 (CSS Framework)
-- Vanilla JavaScript & CSS3 (Animasi dan Interaksi)
+CryptoSky menggunakan tema visual langit:
 
-## Struktur Folder
+* ☀️ **Light Mode** → nuansa langit cerah dengan awan lembut
+* 🌙 **Dark Mode** → nuansa malam dengan bulan dan bintang
+
+---
+
+# ✨ Fitur Utama
+
+## 🔐 Algoritma Kriptografi
+
+Aplikasi mendukung:
+
+1. Caesar Cipher
+2. Vigenère Cipher
+3. Affine Cipher
+4. Hill Cipher (2x2 & 3x3)
+5. Playfair Cipher
+
+---
+
+# 🎓 Fitur Edukatif
+
+## 📖 Penjelasan Langkah Demi Langkah
+
+Setiap algoritma menampilkan:
+
+* proses transformasi huruf,
+* operasi modulo,
+* perhitungan matematika,
+* perubahan plaintext menjadi ciphertext,
+* visualisasi hasil akhir.
+
+---
+
+## 🧮 Visualisasi Matriks Hill Cipher
+
+Hill Cipher dilengkapi dengan:
+
+* visualisasi matriks 2x2 dan 3x3,
+* proses perkalian matriks,
+* modulo 26,
+* konversi huruf ↔ angka,
+* penjelasan blok teks.
+
+---
+
+## 🟦 Playfair Cipher Interaktif
+
+Playfair Cipher memiliki fitur interaktif:
+
+* tabel 5x5 visual,
+* highlight pasangan huruf,
+* penjelasan rule:
+
+  * same row,
+  * same column,
+  * rectangle swap,
+* interaksi klik/tap langkah,
+* highlight otomatis pada tabel.
+
+Fitur ini mendukung:
+
+* desktop,
+* laptop,
+* mobile/touchscreen.
+
+---
+
+# 🌗 Tampilan Modern CryptoSky
+
+## ☀️ Light Mode
+
+* nuansa langit biru cerah,
+* awan bergerak lembut,
+* tampilan clean dan nyaman.
+
+## 🌙 Dark Mode
+
+* nuansa malam elegan,
+* bulan dan bintang,
+* kontras nyaman untuk mata,
+* seluruh card dan tabel menyesuaikan tema malam.
+
+---
+
+# 📱 Responsive & Mobile Friendly
+
+CryptoSky dirancang agar tetap nyaman digunakan pada:
+
+* desktop,
+* laptop,
+* tablet,
+* smartphone.
+
+Fitur interaktif tetap berjalan pada mode mobile, termasuk:
+
+* tap highlight Playfair,
+* copy hasil cipher,
+* responsive matrix table,
+* mobile navbar.
+
+---
+
+# 🛠️ Teknologi yang Digunakan
+
+* Python 3
+* Flask
+* Jinja2
+* Bootstrap 5
+* HTML5
+* CSS3
+* Vanilla JavaScript
+* Gunicorn
+
+---
+
+# 📂 Struktur Folder
+
 ```text
 SKY-CRYPTO-FLASK/
-├── app.py                   # File utama Flask web server
-├── requirements.txt         # Daftar dependensi Python
-├── Procfile                 # File konfigurasi untuk deployment
-├── README.md                # Dokumentasi proyek
-├── .gitignore               # Daftar file yang diabaikan Git
-├── cipher_modules/          # Modul logika algoritma kriptografi
+├── app.py
+├── requirements.txt
+├── Procfile
+├── README.md
+├── .gitignore
+│
+├── cipher_modules/
 │   ├── __init__.py
 │   ├── caesar_cipher.py
 │   ├── vigenere_cipher.py
 │   ├── affine_cipher.py
 │   ├── hill_cipher.py
 │   └── playfair_cipher.py
-├── templates/               # File HTML (Jinja2)
+│
+├── templates/
 │   ├── layout.html
 │   ├── home.html
 │   └── history.html
-└── static/                  # File statis (CSS, JS)
+│
+└── static/
     ├── style.css
     └── app.js
 ```
 
-## Cara Instalasi Lokal
-1. Pastikan Anda memiliki **Python 3.x** terinstal.
-2. Buka terminal/command prompt.
-3. Masuk ke direktori proyek:
-   ```bash
-   cd SKY-CRYPTO-FLASK
-   ```
-4. (Opsional namun disarankan) Buat dan aktifkan *virtual environment*:
-   ```bash
-   # Windows
-   python -m venv venv
-   venv\Scripts\activate
-   
-   # Linux/Mac
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-5. Install *dependencies*:
-   ```bash
-   pip install -r requirements.txt
-   ```
+---
 
-## Cara Menjalankan
-1. Di terminal Anda, jalankan aplikasi Flask:
-   ```bash
-   python app.py
-   ```
-2. Buka browser dan akses alamat: `http://localhost:5000`
+# ⚙️ Cara Menjalankan Secara Lokal
 
-## Cara Deploy
-Aplikasi ini sudah dilengkapi dengan `Procfile` dan `requirements.txt` sehingga siap untuk dideploy di platform PaaS seperti **Render**, **Heroku**, atau **Railway**.
-- Cukup hubungkan repository GitHub Anda dengan platform terkait.
-- Platform akan otomatis mendeteksi sebagai aplikasi Python, menginstal `requirements.txt`, dan menjalankan perintah di `Procfile`.
+## 1. Clone Repository
+
+```bash
+git clone https://github.com/USERNAME/REPOSITORY.git
+```
+
+## 2. Masuk ke Folder Project
+
+```bash
+cd SKY-CRYPTO-FLASK
+```
+
+## 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+## 4. Jalankan Flask
+
+```bash
+python app.py
+```
+
+## 5. Buka Browser
+
+```text
+http://127.0.0.1:5000
+```
 
 ---
-*Dibuat untuk keperluan tugas kuliah Kriptografi.*
+
+# 🚀 Deployment
+
+Project ini sudah dikonfigurasi menggunakan:
+
+* `requirements.txt`
+* `Procfile`
+* `gunicorn`
+
+sehingga siap dideploy ke platform seperti:
+
+* Koyeb
+* Railway
+* Render
+* Heroku
+
+Deployment utama proyek ini menggunakan **Koyeb**.
+
+---
+
+# 🧪 Pengujian Aplikasi
+
+Pengujian dilakukan pada:
+
+* mode desktop,
+* mode mobile,
+* light mode,
+* dark mode.
+
+Pengujian mencakup:
+
+* validasi input,
+* encrypt/decrypt,
+* responsive design,
+* visualisasi matriks,
+* interaksi Playfair,
+* copy output,
+* history,
+* error handling.
+
+---
+
+# 📚 Tujuan Edukasi
+
+Aplikasi ini dibuat bukan hanya untuk memenuhi tugas mata kuliah Kriptografi, tetapi juga untuk membantu pengguna memahami:
+
+* konsep dasar kriptografi klasik,
+* logika enkripsi dan dekripsi,
+* operasi modulo,
+* transformasi karakter,
+* penggunaan matriks dalam kriptografi.
+
+---
+
+# 👨‍💻 Author
+
+Roy Bakti Surya Medal
+Mahasiswa Teknik Informatika, Fakultas Teknologi Informasi
