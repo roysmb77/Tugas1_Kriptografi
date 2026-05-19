@@ -63,19 +63,34 @@ def process_playfair(text, keyword, mode):
     
     formula = f"""
     <div class="mb-2">
-        <span class="badge bg-primary mb-2">Tabel Playfair 5x5</span>
-        <div class="table-responsive" style="max-width: 250px;">
-            <table class="table table-bordered mb-0 playfair-table">
-                <tbody>
-                    {table_rows}
-                </tbody>
-            </table>
+        <span class="badge bg-primary mb-2">Rumus Playfair Cipher</span>
+        
+        <div class="mb-3">
+            <label class="form-label fw-bold small mb-1 text-muted">Aturan Umum:</label>
+            <div class="p-2 border dynamic-card-border rounded dynamic-bg-code small text-start">
+                <ol class="mb-0 ps-3">
+                    <li>Jika dua huruf satu baris &rarr; geser ke kanan (enkripsi) atau ke kiri (dekripsi).</li>
+                    <li>Jika dua huruf satu kolom &rarr; geser ke bawah (enkripsi) atau ke atas (dekripsi).</li>
+                    <li>Jika membentuk persegi &rarr; tukar sudut pada baris yang sama.</li>
+                </ol>
+            </div>
         </div>
-        <small class="dynamic-text-muted d-block mt-2">Huruf J digabung dengan I.</small>
-        <div class="alert alert-info dynamic-bg-code dynamic-text border-0 py-2 px-3 small mt-2">
-            <i class="fa-solid fa-lightbulb text-warning me-2"></i>
-            Playfair Cipher mengenkripsi pasangan huruf (bigram) berdasarkan posisinya dalam tabel 5x5: baris yang sama, kolom yang sama, atau bentuk persegi.
+
+        <div class="mb-3">
+            <label class="form-label fw-bold small mb-1 text-muted">Implementasi Saat Ini:</label>
+            <div class="p-2 border dynamic-card-border rounded dynamic-bg-code text-center">
+                <div class="mb-2 font-monospace fw-bold">Keyword = {keyword}</div>
+                <div class="table-responsive d-flex justify-content-center" style="margin-bottom: 0;">
+                    <table class="table table-bordered mb-0 playfair-table" style="background-color: transparent; width: auto;">
+                        <tbody>
+                            {table_rows}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+
+        <small class="dynamic-text-muted d-block mt-2">Catatan: Huruf J digabung dengan I.</small>
     </div>
     """
 

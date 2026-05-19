@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     themeToggle.addEventListener('click', () => {
         const currentTheme = htmlElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        const processBtnIcon = document.getElementById('process-btn-icon');
         
         htmlElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateIcon(theme) {
         const navLogoIcon = document.getElementById('nav-logo-icon');
         const emptyStateIcon = document.getElementById('empty-state-icon');
+        const processBtnIcon = document.getElementById('process-btn-icon');
         
         if (theme === 'dark') {
             icon.classList.remove('fa-moon');
@@ -39,6 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 emptyStateIcon.classList.remove('fa-cloud-sun', 'text-primary');
                 emptyStateIcon.classList.add('fa-moon', 'text-warning');
             }
+            if (processBtnIcon) {
+                processBtnIcon.classList.remove('fa-cloud-sun');
+                processBtnIcon.classList.add('fa-cloud-moon');
+            }
         } else {
             icon.classList.remove('fa-sun');
             icon.classList.add('fa-moon');
@@ -51,6 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (emptyStateIcon) {
                 emptyStateIcon.classList.remove('fa-moon', 'text-warning');
                 emptyStateIcon.classList.add('fa-cloud-sun', 'text-primary');
+            }
+            if (processBtnIcon) {
+                processBtnIcon.classList.remove('fa-cloud-moon');
+                processBtnIcon.classList.add('fa-cloud-sun');
             }
         }
     }
@@ -107,6 +117,114 @@ document.addEventListener('DOMContentLoaded', () => {
         if (activeGroup) {
             activeGroup.style.display = 'block';
         }
+    }
+
+    // =========================================
+    // HILL CIPHER MATRIX GRID INPUT
+    // =========================================
+
+    const hillMatrixSize = document.getElementById('hill_matrix_size');
+    const hillMatrixGrid = document.getElementById('hill-matrix-grid');
+    const hillMatrixHidden = document.getElementById('hill_key_matrix');
+
+    function getDefaultHillValues(size) {
+        if (size === 3) {
+            return [
+                [6, 24, 1],
+                [13, 16, 10],
+                [20, 17, 15]
+            ];
+        }
+
+        return [
+            [3, 3],
+            [2, 5]
+        ];
+    }
+
+    function parseHillMatrixValue(value) {
+        if (!value) return null;
+
+        try {
+            return value
+                .trim()
+                .split('\n')
+                .map(row => row.split(',').map(num => num.trim()));
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function updateHiddenHillMatrix() {
+        if (!hillMatrixGrid || !hillMatrixHidden || !hillMatrixSize) return;
+
+        const size = parseInt(hillMatrixSize.value);
+        const rows = [];
+
+        for (let r = 0; r < size; r++) {
+            const cols = [];
+
+            for (let c = 0; c < size; c++) {
+                const input = document.getElementById(`hill-cell-${r}-${c}`);
+                cols.push(input ? input.value.trim() : '');
+            }
+
+            rows.push(cols.join(','));
+        }
+
+        hillMatrixHidden.value = rows.join('\n');
+    }
+
+    function renderHillMatrixGrid() {
+        if (!hillMatrixSize || !hillMatrixGrid || !hillMatrixHidden) return;
+
+        const size = parseInt(hillMatrixSize.value);
+
+        hillMatrixGrid.innerHTML = '';
+        hillMatrixGrid.classList.remove('hill-grid-2', 'hill-grid-3');
+        hillMatrixGrid.classList.add(size === 3 ? 'hill-grid-3' : 'hill-grid-2');
+
+        const oldMatrix = parseHillMatrixValue(hillMatrixHidden.value);
+        const defaultMatrix = getDefaultHillValues(size);
+
+        for (let r = 0; r < size; r++) {
+            for (let c = 0; c < size; c++) {
+                const input = document.createElement('input');
+
+                input.type = 'number';
+                input.className = 'hill-matrix-cell';
+                input.id = `hill-cell-${r}-${c}`;
+                input.placeholder = '0';
+
+                if (
+                    oldMatrix &&
+                    oldMatrix.length === size &&
+                    oldMatrix[r] &&
+                    oldMatrix[r].length === size
+                ) {
+                    input.value = oldMatrix[r][c];
+                } else {
+                    input.value = defaultMatrix[r][c];
+                }
+
+                input.addEventListener('input', updateHiddenHillMatrix);
+
+                hillMatrixGrid.appendChild(input);
+            }
+        }
+
+        updateHiddenHillMatrix();
+    }
+
+    if (hillMatrixSize && hillMatrixGrid && hillMatrixHidden) {
+        const currentMatrix = parseHillMatrixValue(hillMatrixHidden.value);
+
+        if (currentMatrix && currentMatrix.length === 3) {
+            hillMatrixSize.value = '3';
+        }
+
+        renderHillMatrixGrid();
+        hillMatrixSize.addEventListener('change', renderHillMatrixGrid);
     }
 
     // 4. Logika Interaktif Playfair Cipher (Highlight Tabel)
@@ -212,10 +330,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
             } else if (algoSelect === 'hill') {
+                updateHiddenHillMatrix();
+
                 const hillMatrix = document.getElementById('hill_key_matrix').value.trim();
+
                 if (!hillMatrix) {
                     e.preventDefault();
                     alert('Pesan Error: Matriks kunci wajib diisi.');
+                    return;
+                }
+
+                const matrixInputs = document.querySelectorAll('.hill-matrix-cell');
+                const hasEmptyCell = Array.from(matrixInputs).some(input => input.value.trim() === '');
+
+                if (hasEmptyCell) {
+                    e.preventDefault();
+                    alert('Pesan Error: Semua elemen matriks Hill wajib diisi.');
                     return;
                 }
             } else if (algoSelect === 'playfair') {
@@ -235,8 +365,10 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCopy.addEventListener('click', () => {
             const outputText = document.getElementById('output-text');
             if (outputText) {
-                const textToCopy = outputText.innerText || outputText.textContent;
-                navigator.clipboard.writeText(textToCopy).then(() => {
+                // Menggunakan data-raw-result agar spasi dan format asli tidak hilang (fallback ke innerText)
+                const textToCopy = outputText.getAttribute('data-raw-result') || outputText.innerText || outputText.textContent;
+                
+                const showSuccess = () => {
                     const originalHTML = btnCopy.innerHTML;
                     btnCopy.innerHTML = '<i class="fa-solid fa-check me-1"></i>Tersalin!';
                     btnCopy.classList.replace('btn-outline-success', 'btn-success');
@@ -245,9 +377,39 @@ document.addEventListener('DOMContentLoaded', () => {
                         btnCopy.innerHTML = originalHTML;
                         btnCopy.classList.replace('btn-success', 'btn-outline-success');
                     }, 2000);
-                }).catch(err => {
-                    alert('Gagal menyalin teks: ' + err);
-                });
+                };
+
+                const fallbackCopyTextToClipboard = (text) => {
+                    try {
+                        const textArea = document.createElement("textarea");
+                        textArea.value = text;
+                        // Avoid scrolling to bottom
+                        textArea.style.top = "0";
+                        textArea.style.left = "0";
+                        textArea.style.position = "fixed";
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        showSuccess();
+                    } catch (err) {
+                        alert('Gagal menyalin teks secara manual: ' + err);
+                    }
+                };
+
+                // Coba gunakan Clipboard API modern jika tersedia
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        showSuccess();
+                    }).catch(err => {
+                        console.warn("Gagal menggunakan Clipboard API, mencoba fallback...", err);
+                        fallbackCopyTextToClipboard(textToCopy);
+                    });
+                } else {
+                    // Gunakan fallback untuk environment non-HTTPS atau jika clipboard tidak didukung
+                    fallbackCopyTextToClipboard(textToCopy);
+                }
             }
         });
     }

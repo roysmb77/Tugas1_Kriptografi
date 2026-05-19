@@ -26,29 +26,50 @@ def process_affine(text, key_a, key_b, mode):
         return {"result": f"Error: Kunci 'a' ({a}) tidak coprime dengan 26 (FPB bukan 1). Tidak bisa dienkripsi/dekripsi.", "steps": [], "formula": ""}
 
     if mode == 'encrypt':
-        general_formula = "C &equiv; mP + b (mod 26)"
-        formula_html = f"E(x) = ({a}*x + {b}) mod 26"
-        legend = ""
+        general_formula = "C &equiv; (mP + b) mod 26"
+        formula_html = f"C &equiv; ({a}P + {b}) mod 26"
+        legend = f"""
+        <div class="small dynamic-text-muted mb-2 text-start">
+            <strong>P</strong> = Plaintext <br>
+            <strong>C</strong> = Ciphertext <br>
+            <strong>m</strong> = nilai a ({a}) <br>
+            <strong>b</strong> = nilai pergeseran ({b})
+        </div>
+        """
     else:
         a_inv = mod_inverse(a, 26)
-        general_formula = "P &equiv; m⁻¹ (C - b) (mod 26)"
-        formula_html = f"D(x) = {a_inv} * (x - {b}) mod 26"
-        legend = f"<div class='small dynamic-text-muted mt-2 text-start'><strong>m⁻¹</strong> adalah inverse modulo dari <strong>m</strong><br><strong>{a_inv}</strong> adalah inverse dari <strong>{a}</strong> modulo 26.</div>"
+        general_formula = "P &equiv; m⁻¹(C - b) mod 26"
+        formula_html = f"P &equiv; {a_inv}(C - {b}) mod 26"
+        legend = f"""
+        <div class="small dynamic-text-muted mb-2 text-start">
+            <strong>P</strong> = Plaintext <br>
+            <strong>C</strong> = Ciphertext <br>
+            <strong>m</strong> = nilai a ({a}) <br>
+            <strong>b</strong> = nilai pergeseran ({b}) <br>
+            <strong>m⁻¹</strong> = inverse modulo dari m <br>
+            <strong>{a_inv}</strong> adalah inverse dari {a} modulo 26
+        </div>
+        """
         
     formula = f"""
     <div class="mb-2">
         <span class="badge bg-primary mb-2">Rumus Affine Cipher</span>
-        <div class="p-2 border dynamic-card-border rounded dynamic-bg-code fs-6 mb-2" style="max-width: 450px;">
-            <div class="text-start dynamic-text-muted mb-1 small">Rumus Umum:</div>
-            <div class="font-monospace fw-bold text-center mb-2">{general_formula}</div>
-            <div class="text-start dynamic-text-muted mb-1 small">Implementasi:</div>
-            <div class="font-monospace fw-bold text-center">{formula_html}</div>
-            {legend}
+        
+        <div class="mb-3">
+            <label class="form-label fw-bold small mb-1 text-muted">Rumus Umum:</label>
+            <div class="p-2 border dynamic-card-border rounded dynamic-bg-code font-monospace text-center">
+                {general_formula}
+            </div>
         </div>
-        <div class="alert alert-info dynamic-bg-code dynamic-text border-0 py-2 px-3 small">
-            <i class="fa-solid fa-lightbulb text-warning me-2"></i>
-            Affine Cipher menggabungkan teknik perkalian (dengan <strong>m</strong>/a) dan pergeseran (dengan <strong>b</strong>).
+
+        <div class="mb-3">
+            <label class="form-label fw-bold small mb-1 text-muted">Implementasi Saat Ini:</label>
+            <div class="p-2 border dynamic-card-border rounded dynamic-bg-code font-monospace text-center">
+                {formula_html}
+            </div>
         </div>
+
+        {legend}
     </div>
     """
 

@@ -1,9 +1,9 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="row justify-content-center">
+<div class="crypto-stack-layout">
     <!-- Kolom Form Input -->
-    <div class="col-lg-5 mb-4">
+    <div class="stack-input">
         <div class="crypto-card">
             <h3 class="mb-3 text-center"><i class="fa-solid fa-lock me-2"></i>Mesin Kripto</h3>
             <p class="text-center small mb-4" style="opacity: 0.8;">Pilih algoritma, masukkan teks, dan lihat keajaibannya.</p>
@@ -23,17 +23,34 @@
                 </div>
 
                 <!-- Pilihan Mode (Encrypt / Decrypt) -->
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Mode</label>
-                    <div class="d-flex gap-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="mode" id="mode-encrypt" value="encrypt" {% if request.form.get('mode', 'encrypt') == 'encrypt' %}checked{% endif %}>
-                            <label class="form-check-label" for="mode-encrypt">Enkripsi</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="mode" id="mode-decrypt" value="decrypt" {% if request.form.get('mode') == 'decrypt' %}checked{% endif %}>
-                            <label class="form-check-label" for="mode-decrypt">Dekripsi</label>
-                        </div>
+                <!-- Pilihan Mode -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold mb-2">Pilih Operasi</label>
+
+                    <div class="mode-card-group">
+                        <input type="radio" class="btn-check" name="mode" id="mode-encrypt" value="encrypt"
+                            {% if request.form.get('mode', 'encrypt') == 'encrypt' %}checked{% endif %}>
+                        <label class="mode-card" for="mode-encrypt">
+                            <div class="mode-icon encrypt-icon">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div>
+                                <strong>Ubah ke Kode Rahasia</strong>
+                                <span>Enkripsi plaintext menjadi ciphertext</span>
+                            </div>
+                        </label>
+
+                        <input type="radio" class="btn-check" name="mode" id="mode-decrypt" value="decrypt"
+                            {% if request.form.get('mode') == 'decrypt' %}checked{% endif %}>
+                        <label class="mode-card" for="mode-decrypt">
+                            <div class="mode-icon decrypt-icon">
+                                <i class="fa-solid fa-key"></i>
+                            </div>
+                            <div>
+                                <strong>Buka Kode Rahasia</strong>
+                                <span>Dekripsi ciphertext menjadi plaintext</span>
+                            </div>
+                        </label>
                     </div>
                 </div>
 
@@ -82,10 +99,45 @@
 
                 <!-- Kunci Hill -->
                 <div class="key-group" id="key-group-hill" style="display: none;">
+
+                    <!-- Pilihan ukuran matriks -->
                     <div class="mb-3">
-                        <label for="hill_key_matrix" class="form-label fw-bold">Matriks Kunci</label>
-                        <textarea class="form-control" id="hill_key_matrix" name="hill_key_matrix" rows="3" placeholder="3, 3&#10;2, 5">{{ request.form.get('hill_key_matrix', '3, 3\n2, 5') }}</textarea>
-                        <div class="form-text">Pisahkan kolom dengan koma (,), pisahkan baris dengan Enter. Mendukung matriks 2x2 atau 3x3. Determinan harus punya inverse mod 26.</div>
+                        <label for="hill_matrix_size" class="form-label fw-bold">
+                            <i class="fa-solid fa-table-cells me-2 text-primary"></i>
+                            Ukuran Matriks
+                        </label>
+
+                        <select class="form-select" id="hill_matrix_size" name="hill_matrix_size">
+                            <option value="2" selected>2 x 2</option>
+                            <option value="3">3 x 3</option>
+                        </select>
+
+                        <div class="form-text">
+                            Pilih ukuran matriks kunci yang ingin digunakan.
+                        </div>
+                    </div>
+
+                    <!-- Grid Matrix -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Matriks Kunci
+                        </label>
+
+                        <div id="hill-matrix-grid" class="hill-matrix-input-grid">
+                            <!-- Dibuat otomatis oleh JavaScript -->
+                        </div>
+
+                        <!-- Hidden input untuk backend Flask -->
+                        <input
+                            type="hidden"
+                            id="hill_key_matrix"
+                            name="hill_key_matrix"
+                            value="{{ request.form.get('hill_key_matrix', '3,3\n2,5') }}"
+                        >
+
+                        <div class="form-text mt-2">
+                            Isi setiap elemen matriks kunci.
+                        </div>
                     </div>
                 </div>
 
@@ -98,15 +150,20 @@
                 </div>
 
                 <!-- Tombol Submit -->
-                <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm mt-2">
-                    <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Proses
+                <button type="submit" class="crypto-process-btn">
+                    <span class="btn-glow"></span>
+
+                    <i id="process-btn-icon"
+                        class="fa-solid fa-cloud-sun me-2"></i>
+
+                    Jalankan Proses
                 </button>
             </form>
         </div>
     </div>
 
     <!-- Kolom Hasil -->
-    <div class="col-lg-7">
+    <div class="stack-result">
         {% if result %}
         <div class="crypto-card fade-in">
             <h3 class="mb-3"><i class="fa-solid fa-square-check text-success me-2"></i>Hasil Proses</h3>
@@ -119,7 +176,7 @@
                         <i class="fa-solid fa-copy me-1"></i>Salin Hasil
                     </button>
                 </div>
-                <div class="p-3 bg-success bg-opacity-10 border border-success rounded fw-bold selectable-output" id="output-text" style="word-break: break-all; font-size: 1.2rem; user-select: text !important; -webkit-user-select: text !important;">
+                <div class="p-3 bg-success bg-opacity-10 border border-success rounded fw-bold selectable-output" id="output-text" style="word-break: break-all; font-size: 1.2rem; user-select: text !important; -webkit-user-select: text !important;" data-raw-result="{{ result.result }}">
                     {{ result.result }}
                 </div>
             </div>

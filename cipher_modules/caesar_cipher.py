@@ -10,26 +10,34 @@ def process_caesar(text, key, mode):
 
     if mode == 'decrypt':
         shift = -shift
-        op = "-"
-        fn = "D(x) / P(x)"
+        fn_umum = "P(x) = (C - k) mod 26"
+        fn_impl = f"P(x) = (C - {key}) mod 26"
     else:
-        op = "+"
-        fn = "E(x) / C(x)"
+        fn_umum = "C(x) = (P + k) mod 26"
+        fn_impl = f"C(x) = (P + {key}) mod 26"
         
     formula = f"""
     <div class="mb-2">
         <span class="badge bg-primary mb-2">Rumus Caesar Cipher</span>
-        <div class="p-2 border dynamic-card-border rounded dynamic-bg-code font-monospace fs-5 text-center mb-2" style="max-width: 350px;">
-            {fn} = (P {op} k) mod 26
+        
+        <div class="mb-3">
+            <label class="form-label fw-bold small mb-1 text-muted">Rumus Umum:</label>
+            <div class="p-2 border dynamic-card-border rounded dynamic-bg-code font-monospace text-center">
+                {fn_umum}
+            </div>
         </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold small mb-1 text-muted">Implementasi Saat Ini:</label>
+            <div class="p-2 border dynamic-card-border rounded dynamic-bg-code font-monospace text-center">
+                {fn_impl}
+            </div>
+        </div>
+
         <div class="small dynamic-text-muted mb-2">
-            <strong>P</strong> = Plaintext (huruf asal) <br>
-            <strong>C</strong> = Ciphertext (huruf hasil) <br>
-            <strong>k</strong> = Key / Nilai Shift ({key})
-        </div>
-        <div class="alert alert-info dynamic-bg-code dynamic-text border-0 py-2 px-3 small">
-            <i class="fa-solid fa-lightbulb text-warning me-2"></i>
-            Caesar Cipher bekerja dengan menggeser huruf plaintext secara alfabetis sebanyak nilai key (k) menggunakan operasi matematika modulo 26.
+            <strong>P</strong> = Plaintext <br>
+            <strong>C</strong> = Ciphertext <br>
+            <strong>k</strong> = Shift / Key
         </div>
     </div>
     """

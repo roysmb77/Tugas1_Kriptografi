@@ -129,20 +129,47 @@ def process_hill(text, matrix_str, mode):
     table_rows = ""
     for row in active_matrix:
         table_rows += "<tr>" + "".join([f"<td class='text-center align-middle fs-5 p-2 pf-cell'>{val}</td>" for val in row]) + "</tr>"
-    
+        
+    if mode == 'encrypt':
+        general_formula = "C = K &times; P mod 26"
+        impl_prefix = "C = "
+        impl_suffix = " &times; P mod 26"
+    else:
+        general_formula = "P = K⁻¹ &times; C mod 26"
+        impl_prefix = "P = "
+        impl_suffix = " &times; C mod 26"
+
     formula = f"""
     <div class="mb-2">
-        <span class="badge bg-primary mb-2">Matriks Digunakan (Mod 26)</span>
-        <div class="table-responsive" style="max-width: 250px;">
-            <table class="table table-bordered mb-0 playfair-table hill-table">
-                <tbody>
-                    {table_rows}
-                </tbody>
-            </table>
+        <span class="badge bg-primary mb-2">Rumus Hill Cipher</span>
+        
+        <div class="mb-3">
+            <label class="form-label fw-bold small mb-1 text-muted">Rumus Umum:</label>
+            <div class="p-2 border dynamic-card-border rounded dynamic-bg-code font-monospace text-center">
+                {general_formula}
+            </div>
         </div>
-        <div class="alert alert-info dynamic-bg-code dynamic-text border-0 py-2 px-3 small mt-2">
-            <i class="fa-solid fa-lightbulb text-warning me-2"></i>
-            Hill Cipher menggunakan perkalian matriks (aljabar linear) dengan vektor blok teks untuk menghasilkan ciphertext, lalu di-modulo 26.
+
+        <div class="mb-3">
+            <label class="form-label fw-bold small mb-1 text-muted">Implementasi Saat Ini:</label>
+            <div class="p-2 border dynamic-card-border rounded dynamic-bg-code font-monospace d-flex align-items-center justify-content-center gap-2">
+                <span>{impl_prefix}</span>
+                <div class="table-responsive" style="max-width: 250px; margin-bottom: 0;">
+                    <table class="table table-bordered mb-0 playfair-table hill-table" style="background-color: transparent;">
+                        <tbody>
+                            {table_rows}
+                        </tbody>
+                    </table>
+                </div>
+                <span>{impl_suffix}</span>
+            </div>
+        </div>
+
+        <div class="small dynamic-text-muted mb-2 text-start">
+            <strong>P</strong> = vektor plaintext <br>
+            <strong>C</strong> = vektor ciphertext <br>
+            <strong>K</strong> = matriks kunci <br>
+            <strong>K⁻¹</strong> = inverse matriks modulo 26
         </div>
     </div>
     """
@@ -152,48 +179,58 @@ def process_hill(text, matrix_str, mode):
         vec = [ord(c) - ord('A') for c in block]
         
         res_vec = []
+        raw_res_vec = []
         
-        step_html = f"""
-        <div class="card mb-3 shadow-sm dynamic-card-border" style="background-color: var(--input-bg);">
-            <div class="card-header py-2 d-flex align-items-center dynamic-header-bg dynamic-card-border">
-                <span class="me-2 dynamic-text-muted small">Blok Teks:</span>
-                <span class="badge bg-primary fs-6 me-2">{block}</span> 
-                <i class="fa-solid fa-arrow-right mx-2 dynamic-text-muted"></i> 
-                <span class="font-monospace px-2 py-1 rounded dynamic-bg-code" style="color: var(--text-color);">{vec}</span>
-            </div>
-            <div class="card-body py-2 px-3">
-        """
-        
-        # Perkalian matriks dengan vektor
         for r in range(n):
             sum_val = sum(active_matrix[r][c] * vec[c] for c in range(n))
-            mod_val = sum_val % 26
-            res_vec.append(mod_val)
-            
-            calc_str = " + ".join([f"({active_matrix[r][c]} &times; {vec[c]})" for c in range(n)])
-            
-            step_html += f"""
-                <div class="mb-2 pb-2 dynamic-border-bottom last-border-none">
-                    <div class="small dynamic-text-muted mb-1">Perhitungan Baris ke-{r+1}</div>
-                    <div class="d-flex align-items-center flex-wrap gap-2 font-monospace dynamic-text" style="font-size: 0.95rem;">
-                        <span class="text-nowrap">{calc_str} = <strong>{sum_val}</strong></span>
-                        <i class="fa-solid fa-arrow-right dynamic-text-muted small"></i>
-                        <span class="badge bg-secondary">Mod 26</span>
-                        <i class="fa-solid fa-equals dynamic-text-muted small"></i>
-                        <strong class="dynamic-text-success fs-5">{mod_val}</strong>
-                        <i class="fa-solid fa-arrow-right dynamic-text-muted small"></i>
-                        <span class="badge bg-success fs-6">{chr(mod_val + ord('A'))}</span>
-                    </div>
-                </div>
-            """
+            raw_res_vec.append(sum_val)
+            res_vec.append(sum_val % 26)
             
         res_chars = "".join([chr(val + ord('A')) for val in res_vec])
         result.append(res_chars)
-        
-        step_html += f"""
+
+        matrix_html = "<table class='math-matrix'>" + "".join(["<tr>" + "".join([f"<td>{val}</td>" for val in row]) + "</tr>" for row in active_matrix]) + "</table>"
+        vec_html = "<table class='math-matrix'>" + "".join([f"<tr><td>{v}</td></tr>" for v in vec]) + "</table>"
+        raw_res_html = "<table class='math-matrix'>" + "".join([f"<tr><td>{v}</td></tr>" for v in raw_res_vec]) + "</table>"
+        res_html = "<table class='math-matrix'>" + "".join([f"<tr><td>{v}</td></tr>" for v in res_vec]) + "</table>"
+
+        matrix_label = "Matriks Kunci" if mode == 'encrypt' else "Inverse Matriks Kunci"
+
+        step_html = f"""
+        <div class="card mb-3 shadow-sm dynamic-card-border" style="background-color: var(--input-bg);">
+            <div class="card-header py-2 d-flex justify-content-between align-items-center dynamic-header-bg dynamic-card-border">
+                <div>
+                    <span class="badge bg-primary fs-6">Blok {i//n + 1}</span> 
+                </div>
             </div>
-            <div class="card-footer py-2 text-end dynamic-footer-bg dynamic-card-border">
-                <span class="dynamic-text-muted small me-2">Hasil Konversi Blok:</span> <span class="badge bg-success fs-6">{res_chars}</span>
+            <div class="card-body py-3 px-3">
+                <div class="math-matrix-container overflow-x-auto">
+                  <div class="d-flex align-items-center justify-content-center flex-nowrap" style="min-width: max-content;">
+                     <div class="matrix-wrapper text-center mx-2" style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <div class="small dynamic-text-muted mb-1">{matrix_label}</div>
+                        {matrix_html}
+                     </div>
+                     <div class="fs-4 mx-2 dynamic-text">&times;</div>
+                     <div class="matrix-wrapper text-center mx-2" style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <div class="small dynamic-text-muted mb-1">Vektor</div>
+                        {vec_html}
+                     </div>
+                     <div class="fs-4 mx-2 dynamic-text">=</div>
+                     <div class="matrix-wrapper text-center mx-2" style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <div class="small dynamic-text-muted mb-1">Hasil Kali</div>
+                        {raw_res_html}
+                     </div>
+                     <div class="fs-6 mx-2 dynamic-text-muted">mod 26</div>
+                     <div class="fs-4 mx-2 dynamic-text">=</div>
+                     <div class="matrix-wrapper text-center mx-2" style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <div class="small dynamic-text-muted mb-1">Hasil</div>
+                        {res_html}
+                     </div>
+                  </div>
+                </div>
+                <div class="text-center mt-3 fw-bold fs-5 text-primary" style="letter-spacing: 2px;">
+                    {block} <i class="fa-solid fa-arrow-right mx-3 dynamic-text-muted"></i> {res_chars}
+                </div>
             </div>
         </div>
         """
